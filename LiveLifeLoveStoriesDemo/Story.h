@@ -44,5 +44,8 @@ private:
 
 	Event* _findEventById(int id);
 	Message* _findMessageById(int id);
+	MakeProtagonistEvent* _getMpei();
+	ChooseClothesEvent* _findCceById(int id);
+	Protagonist* _getPlayer();
 };
 

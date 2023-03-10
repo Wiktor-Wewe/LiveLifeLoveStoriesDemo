@@ -18,6 +18,11 @@ public:
 		this->_hairs = hairs;
 	}
 	int getId();
+	std::string getName();
+	std::string getText();
+	std::vector<std::vector<std::string>> getFaces();
+	std::vector<std::vector<std::string>> getSkins();
+	std::vector<std::vector<std::string>> getHairs();
 
 private:
 	int _id;
