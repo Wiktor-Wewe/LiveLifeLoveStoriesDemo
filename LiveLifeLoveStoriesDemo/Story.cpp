@@ -72,7 +72,7 @@ int Story::loadStory(std::fstream* file)
     hairs[2].push_back("brawn hair1");
     hairs[2].push_back("brawn hair2");
 
-    this->_MPEvent = new MakeProtagonistEvent(1, "Pierwszy test", "Wybierz ciuszka", faces, skins, hairs);
+    this->_MPEvent = new MakeProtagonistEvent(1, "Pierwszy test", "Wybierz ciuszka", faces, skins, hairs, 1);
 
     //messages
     std::vector<int> musicId;
@@ -186,12 +186,27 @@ int Story::play()
                     std::cout << "[" << i << "] " << currentMPE->getSkins()[i][0] << std::endl;
                 }
                 std::cin >> playerInput;
-                this->_getPlayer()->setSprite(playerInput);
+                this->_getPlayer()->setGSkins(currentMPE->getSkins()[playerInput]);
 
                 std::cout << "Wybierz twarz" << std::endl;
                 for (int i = 0; i < currentMPE->getFaces().size(); i++) {
                     std::cout << "[" << i << "] " << currentMPE->getFaces()[i][0] << std::endl;
                 }
+                std::cin >> playerInput;
+                this->_getPlayer()->setGFaces(currentMPE->getFaces()[playerInput]);
+
+                std::cout << "Wybierz kolor wlosow" << std::endl;
+                for (int i = 0; i < currentMPE->getHairs().size(); i++) {
+                    std::cout << "[" << i << "] " << currentMPE->getHairs()[i][0] << std::endl;
+                }
+                std::cin >> playerInput;
+                this->_getPlayer()->setGHairs(currentMPE->getHairs()[playerInput]);
+
+                this->_getPlayer()->printInfoAboutPlayer();
+
+                int nextMessageId = currentMPE->getNextMessageId();
+                currentMessage = this->_findMessageById(nextMessageId);
+                currentMPE = NULL;
             }
             else if (currentCCE) {
 

@@ -1,4 +1,5 @@
 #include "Protagonist.h"
+#include <iostream>
 
 void Protagonist::setName(std::string name)
 {
@@ -68,4 +69,14 @@ std::string Protagonist::getCurrentHairs()
 std::string Protagonist::getCurrentClothes()
 {
 	return this->_gClothes[this->_gClothesId];
+}
+
+void Protagonist::printInfoAboutPlayer()
+{
+	std::cout << std::endl;
+	std::cout << "Name: " << this->_name << std::endl;
+	std::cout << "Current skin: " << this->getCurrentSkin() << std::endl;
+	std::cout << "Current face: " << this->getCurrentFace() << std::endl;
+	std::cout << "Current hairs: " << this->getCurrentHairs() << std::endl;
+	std::cout << std::endl;
 }

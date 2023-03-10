@@ -35,6 +35,8 @@ public:
 	std::string getCurrentHairs();
 	std::string getCurrentClothes();
 
+	void printInfoAboutPlayer();
+
 private:
 	std::string _name;
 	

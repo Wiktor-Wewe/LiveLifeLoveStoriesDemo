@@ -29,3 +29,8 @@ std::vector<std::vector<std::string>> MakeProtagonistEvent::getHairs()
 {
     return this->_hairs;
 }
+
+int MakeProtagonistEvent::getNextMessageId()
+{
+    return this->_nextMessageId;
+}
