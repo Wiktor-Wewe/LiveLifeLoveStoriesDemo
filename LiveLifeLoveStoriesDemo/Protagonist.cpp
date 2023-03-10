@@ -46,6 +46,11 @@ void Protagonist::setClothes(int id)
 	this->_gClothesId = id;
 }
 
+void Protagonist::setCurrentClothesId(int id)
+{
+	this->_gClothesId = id;
+}
+
 std::string Protagonist::getName()
 {
 	return this->_name;
@@ -69,6 +74,11 @@ std::string Protagonist::getCurrentHairs()
 std::string Protagonist::getCurrentClothes()
 {
 	return this->_gClothes[this->_gClothesId];
+}
+
+int Protagonist::getCurrentClothesId()
+{
+	return this->_gClothesId;
 }
 
 void Protagonist::printInfoAboutPlayer()

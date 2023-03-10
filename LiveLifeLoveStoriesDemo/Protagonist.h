@@ -24,16 +24,21 @@ public:
 	void setGFaces(std::vector<std::string> gfaces);
 	void setGHairs(std::vector<std::string> ghairs);
 	void setGClothes(std::vector<std::string> glothes);
+
 	void setSkin(int id);
 	void setFace(int id);
 	void setHairs(int id);
 	void setClothes(int id);
+
+	void setCurrentClothesId(int id);
 
 	std::string getName();
 	std::string getCurrentSkin();
 	std::string getCurrentFace();
 	std::string getCurrentHairs();
 	std::string getCurrentClothes();
+
+	int getCurrentClothesId();
 
 	void printInfoAboutPlayer();
 

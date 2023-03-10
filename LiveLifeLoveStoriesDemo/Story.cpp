@@ -16,24 +16,29 @@ int Story::loadStory(std::fstream* file)
 
     //chooseClothesEvent
     std::vector<std::vector<std::string>> clothes;
-    clothes.push_back(std::vector<std::string>());
-    clothes.push_back(std::vector<std::string>());
-    clothes[0].push_back("[0] path0");
-    clothes[1].push_back("[1] path1");
-    this->_CCEvents.push_back(ChooseClothesEvent(1, "Wybierz ciuchy", clothes));
+    clothes.push_back(std::vector<std::string>()); 
+    clothes.push_back(std::vector<std::string>()); 
+    clothes[0].push_back("czerwona sukienka");
+    clothes[0].push_back("dluga czerwona sukienka");
+    clothes[1].push_back("czarna sukienka");
+    clothes[1].push_back("dluga czarna sukienka");
+    this->_CCEvents.push_back(ChooseClothesEvent(1, "Wybierz ciuchy", clothes, 1));
 
     //Events
     std::vector<std::string> playeroption1;
     playeroption1.push_back("Wiadomosc 1");
     playeroption1.push_back("Pokaz okno wyboru");
     playeroption1.push_back("Stworz postac");
+    playeroption1.push_back("Wybierz ciuchy");
 
     std::vector<int> nextmessages;
     nextmessages.push_back(1);
     nextmessages.push_back(2);
     nextmessages.push_back(3);
+    nextmessages.push_back(4);
     this->_Events.push_back(Event(1, playeroption1, nextmessages, std::vector<int>(), 0, 0));
     this->_Events.push_back(Event(2, std::vector<std::string>(), std::vector<int>(), std::vector<int>(), 1, 0));
+    this->_Events.push_back(Event(3, std::vector<std::string>(), std::vector<int>(), std::vector<int>(), 0, 1));
 
     //Images
     this->_Images.push_back(Image(1, "placeholder1", "path1"));
@@ -43,12 +48,12 @@ int Story::loadStory(std::fstream* file)
     faces.push_back(std::vector<std::string>());
     faces.push_back(std::vector<std::string>());
     faces.push_back(std::vector<std::string>());
-    faces[0].push_back("black face1");
-    faces[0].push_back("black face2");
-    faces[1].push_back("white face2");
-    faces[1].push_back("white face2");
-    faces[2].push_back("yellow face2");
-    faces[2].push_back("yellow face2");
+    faces[0].push_back("shape1 face1");
+    faces[0].push_back("shape1 face2");
+    faces[1].push_back("shape2 face1");
+    faces[1].push_back("shape2 face2");
+    faces[2].push_back("shape3 face1");
+    faces[2].push_back("shape3 face2");
 
     std::vector<std::vector<std::string>> skins;
     skins.push_back(std::vector<std::string>());
@@ -65,12 +70,12 @@ int Story::loadStory(std::fstream* file)
     hairs.push_back(std::vector<std::string>());
     hairs.push_back(std::vector<std::string>());
     hairs.push_back(std::vector<std::string>());
-    hairs[0].push_back("black hair1");
-    hairs[0].push_back("black hair2");
-    hairs[1].push_back("yellow hair1");
-    hairs[1].push_back("yellow hair2");
-    hairs[2].push_back("brawn hair1");
-    hairs[2].push_back("brawn hair2");
+    hairs[0].push_back("black hairs1");
+    hairs[0].push_back("black hairs2");
+    hairs[1].push_back("yellow hairs1");
+    hairs[1].push_back("yellow hairs2");
+    hairs[2].push_back("brown hairs1");
+    hairs[2].push_back("brown hairs2");
 
     this->_MPEvent = new MakeProtagonistEvent(1, "Pierwszy test", "Wybierz ciuszka", faces, skins, hairs, 1);
 
@@ -86,9 +91,11 @@ int Story::loadStory(std::fstream* file)
     Message m1 = Message(1, "Wiadomosc 1", musicId, sfxId, 1, 2, 1, 2, 0);
     Message m2 = Message(2, "Wiadomosc 2 - zaraz zobaczysz okno wyboru", musicId, sfxId, 2, 1, 2, 0, 1);
     Message m3 = Message(3, "Wiadomosc 3 - zaraz zobaczysz keator postaci", musicId, sfxId, 3, 2, 1, 0, 2);
+    Message m4 = Message(4, "Wiadomosc 4 - zaraz zobaczysz wybor ciuchow", musicId, sfxId, 3, 2, 1, 0, 3);
     this->_Messages.push_back(m1);
     this->_Messages.push_back(m2);
     this->_Messages.push_back(m3);
+    this->_Messages.push_back(m4);
 
     //Music
     Music music1 = Music(1, "Music 1", "Path1");
@@ -181,7 +188,7 @@ int Story::play()
 
                 int playerInput = 0;
                 
-                std::cout << "Wybierz kolor twarzy" << std::endl;
+                std::cout << "Wybierz kolor skory" << std::endl;
                 for (int i = 0; i < currentMPE->getSkins().size(); i++) {
                     std::cout << "[" << i << "] " << currentMPE->getSkins()[i][0] << std::endl;
                 }
@@ -209,7 +216,25 @@ int Story::play()
                 currentMPE = NULL;
             }
             else if (currentCCE) {
+                std::cout << currentCCE->getText() << std::endl;
+                for (int i = 0; i < currentCCE->getClothes().size(); i++) {
+                    std::cout << "[" << i << "] " << currentCCE->getClothes()[i][0] << std::endl;
+                }
+                int playerInput1 = 0;
+                std::cin >> playerInput1;
+                this->_getPlayer()->setGClothes(currentCCE->getClothes()[playerInput1]);
 
+                for (int i = 0; i < currentCCE->getClothes()[playerInput1].size(); i++) {
+                    std::cout << "[" << i << "] " << currentCCE->getClothes()[playerInput1][i] << std::endl;
+                }
+                int playerInput2 = 0;
+                std::cin >> playerInput2;
+                this->_getPlayer()->setCurrentClothesId(playerInput2);
+
+                std::cout << "Player clothes: " << this->_getPlayer()->getCurrentClothes() << std::endl;
+                int nextMessageId = currentCCE->getNextMessageId();
+                currentCCE = NULL;
+                currentMessage = this->_findMessageById(nextMessageId);
             }
             else {
                 return 0;
