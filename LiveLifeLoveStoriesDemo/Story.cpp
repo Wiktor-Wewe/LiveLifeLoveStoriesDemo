@@ -2,6 +2,42 @@
 
 int Story::loadStory(std::fstream* file)
 {
+    std::string buff;
+    int header = 0;
+    while (!file->eof()) {
+        while (!header) {
+            std::getline(*file, buff);
+            header = this->_isHeader(buff);
+        }
+        switch (header) {
+        case 1: // character
+            break;
+        case 2: // cce
+            break;
+        case 3: // event
+            break;
+        case 4: // image
+            break;
+        case 5: // mpe
+            break;
+        case 6: // message
+            break;
+        case 7: // music
+            break;
+        case 8: // sfx
+            break;
+        default:
+            std::cout << "cant handle header: " << buff << std::endl;
+            break;
+        }
+        header = 0;
+    }
+    
+    return 0;
+}
+
+int Story::loadStoryFake(std::fstream* file)
+{
     //character wiktor
     std::vector<std::string> clothesWiktor;
     clothesWiktor.push_back("path1");
@@ -106,7 +142,7 @@ int Story::loadStory(std::fstream* file)
     this->_Musics.push_back(music3);
 
     //Protagonist
-    this->_Player = new Protagonist("Wiktor");
+    this->_Player = new Protagonist();
 
     //Sfx
     Sfx sfx1 = Sfx(1, "sfx 1", "path 1");
@@ -287,4 +323,18 @@ ChooseClothesEvent* Story::_findCceById(int id)
 Protagonist* Story::_getPlayer()
 {
     return this->_Player;
+}
+
+int Story::_isHeader(std::string text)
+{
+    if (text.find("<character>") != std::string::npos) return 1;
+    if (text.find("<cce>") != std::string::npos) return 2;
+    if (text.find("<event>") != std::string::npos) return 3;
+    if (text.find("<image>") != std::string::npos) return 4;
+    if (text.find("<mpe>") != std::string::npos) return 5;
+    if (text.find("<message>") != std::string::npos) return 6;
+    if (text.find("<music>") != std::string::npos) return 7;
+    if (text.find("<sfx>") != std::string::npos) return 8;
+
+    return 0;
 }

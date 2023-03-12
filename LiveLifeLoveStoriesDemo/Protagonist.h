@@ -5,9 +5,9 @@
 class Protagonist
 {
 public:
-	Protagonist(std::string name)
+	Protagonist()
 	{
-		this->_name = name;
+		this->_name = "defaultName";
 
 		this->_gSkinId = 0;
 		this->_gFaceId = 0;

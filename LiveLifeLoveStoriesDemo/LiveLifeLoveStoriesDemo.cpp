@@ -2,16 +2,22 @@
 #include "Story.h"
 #include <fstream>
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc < 2) {
+        std::cout << "Usage: " << std::endl;
+        std::cout << "LiveLifeLoveStoriesDemo [script file]" << std::endl;
+        return 0;
+    }
+
     std::fstream file;
-    file.open("file.wewe", std::ios::in);
+    file.open(argv[1], std::ios::in);
     if (!file.good()) {
         std::cout << "error file" << std::endl;
     }
 
     Story s1 = Story();
-    if (s1.loadStory(&file) == 0) {
+    if (s1.loadStoryFake(&file) == 0) {
         std::cout << "loadind complete" << std::endl;
         s1.play();
     }

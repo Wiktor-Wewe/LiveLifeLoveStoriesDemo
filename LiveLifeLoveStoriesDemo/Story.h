@@ -29,6 +29,7 @@ public:
 	}
 
 	int loadStory(std::fstream* file);
+	int loadStoryFake(std::fstream* file);
 	int play();
 
 private:
@@ -47,5 +48,7 @@ private:
 	MakeProtagonistEvent* _getMpei();
 	ChooseClothesEvent* _findCceById(int id);
 	Protagonist* _getPlayer();
+
+	int _isHeader(std::string text);
 };
 
