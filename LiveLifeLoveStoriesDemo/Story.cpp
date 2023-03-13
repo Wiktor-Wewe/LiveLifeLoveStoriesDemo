@@ -11,6 +11,7 @@ int Story::loadStory(std::fstream* file)
         }
         switch (header) {
         case 1: // character
+            this->_loadCharacter(file);
             break;
         case 2: // cce
             break;
@@ -325,6 +326,39 @@ Protagonist* Story::_getPlayer()
     return this->_Player;
 }
 
+std::string Story::cutStringWhile(std::string text, int begin, char end)
+{
+    std::string newText;
+    int i = begin;
+    while (text[i] != end) {
+        newText += text[i];
+        i++;
+    }
+    return newText;
+}
+
+std::vector<std::string> Story::str2vecstr(std::string text)
+{
+    std::vector<std::string> list;
+    std::string buff;
+    int quote = 0;
+
+    for (int i = 0; i < text.size(); i++) {
+        if (text[i] == '"') {
+            quote++;
+        }
+        if (quote % 2 != 0 && text[i] != '"') {
+            buff += text[i];
+        }
+        if (quote % 2 == 0 && text[i] == '"') {
+            list.push_back(buff);
+            buff.clear();
+        }
+    }
+
+    return list;
+}
+
 int Story::_isHeader(std::string text)
 {
     if (text.find("<character>") != std::string::npos) return 1;
@@ -338,3 +372,63 @@ int Story::_isHeader(std::string text)
 
     return 0;
 }
+
+void Story::_loadCharacter(std::fstream* file)
+{
+    int id = 0;
+    std::string name;
+    std::vector<std::string> paths;
+
+    std::string buff;
+    int position = 0;
+
+    //getting id
+    std::getline(*file, buff);
+    position = buff.find("id: ");
+
+    if (position != std::string::npos) {
+        buff = this->cutStringWhile(buff, 4, ';');
+        id = std::stoi(buff);
+        
+        std::cout << "find characters id: " << id << std::endl;
+    }
+    else {
+        std::cout << "error while loading characters id at position: " << file->tellg() << std::endl;
+        return;
+    }
+
+    //getting name
+    std::getline(*file, buff);
+    position = buff.find("name: ");
+
+    if (position != std::string::npos) {
+        name = this->cutStringWhile(buff, 7, '"');
+
+        std::cout << "find characters name: " << name << std::endl;
+    }
+    else {
+        std::cout << "error while loading characters name at position: " << file->tellg() << std::endl;
+        return;
+    }
+
+    //getting paths
+    std::getline(*file, buff);
+    position = buff.find("sprites: ");
+
+    if (position != std::string::npos) {
+        buff = this->cutStringWhile(buff, 9, ';');
+        paths = this->str2vecstr(buff);
+
+        for (int i = 0; i < paths.size(); i++) {
+            std::cout << "find characters paths [" << i << "] : " << paths[i] << std::endl;
+        }
+    }
+    else {
+        std::cout << "error while loading characters name at position: " << file->tellg() << std::endl;
+        return;
+    }
+
+    this->_Characters.push_back(Character(id, name, paths));
+}
+
+

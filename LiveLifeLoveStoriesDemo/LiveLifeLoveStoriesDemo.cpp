@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     }
 
     Story s1 = Story();
-    if (s1.loadStoryFake(&file) == 0) {
+    if (s1.loadStory(&file) == 0) {
         std::cout << "loadind complete" << std::endl;
         s1.play();
     }
