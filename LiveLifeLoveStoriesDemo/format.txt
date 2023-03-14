@@ -1,0 +1,8 @@
+wes - wewescript
+wesc - wewescriptcompiled
+
+usage:
+LiveLifeLoveStoriesDemo script.wes - compile and make script.wesc
+LiveLifeLoveStoriesDemo -f script.* - force compile and make script.wesc
+LiveLifeLoveStoriesDemo script.wesc - play story
+LiveLifeLoveStoriesDemo -p script.* - force play story
