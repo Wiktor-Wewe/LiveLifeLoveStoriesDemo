@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="ChooseClothesEvent.cpp" />
+    <ClCompile Include="Compilator.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LiveLifeLoveStoriesDemo.cpp" />
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Character.h" />
     <ClInclude Include="ChooseClothesEvent.h" />
+    <ClInclude Include="Compilator.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="MakeProtagonistEvent.h" />

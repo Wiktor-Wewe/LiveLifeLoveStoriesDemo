@@ -13,72 +13,90 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\Compilator">
+      <UniqueIdentifier>{e6abd96d-3ba5-479b-9d6e-6f0b1b0592ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\Compilator">
+      <UniqueIdentifier>{896a246f-a4d7-464f-b5dc-0952d1bdce59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki nagłówkowe\StoryElements">
+      <UniqueIdentifier>{07f25a09-5d4c-4cbe-b3e7-ff5dd9748534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\StoryElements">
+      <UniqueIdentifier>{0e6d9242-9936-4031-a997-f45021a39843}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LiveLifeLoveStoriesDemo.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Message.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Music.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Sfx.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Protagonist.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="MakeProtagonistEvent.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="ChooseClothesEvent.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="Story.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Compilator.cpp">
+      <Filter>Pliki źródłowe\Compilator</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="ChooseClothesEvent.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="MakeProtagonistEvent.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Music.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Protagonist.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Sfx.cpp">
+      <Filter>Pliki źródłowe\StoryElements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Message.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Music.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Sfx.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Protagonist.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="MakeProtagonistEvent.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="ChooseClothesEvent.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="Story.h">
       <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Compilator.h">
+      <Filter>Pliki nagłówkowe\Compilator</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ChooseClothesEvent.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="MakeProtagonistEvent.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Music.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Protagonist.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Sfx.h">
+      <Filter>Pliki nagłówkowe\StoryElements</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

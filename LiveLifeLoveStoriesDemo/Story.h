@@ -53,5 +53,6 @@ private:
 	std::vector<std::string> str2vecstr(std::string text);
 	int _isHeader(std::string text);
 	void _loadCharacter(std::fstream* file);
+	void _loadCCE(std::fstream* file);
 };
 

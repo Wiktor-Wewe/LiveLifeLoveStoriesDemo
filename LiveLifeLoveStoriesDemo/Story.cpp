@@ -14,6 +14,7 @@ int Story::loadStory(std::fstream* file)
             this->_loadCharacter(file);
             break;
         case 2: // cce
+
             break;
         case 3: // event
             break;
@@ -429,6 +430,11 @@ void Story::_loadCharacter(std::fstream* file)
     }
 
     this->_Characters.push_back(Character(id, name, paths));
+}
+
+void Story::_loadCCE(std::fstream* file)
+{
+
 }
 
 
