@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "Story.h"
 #include <fstream>
+#include "Compilator.h"
 
 int main(int argc, char* argv[])
 {
@@ -15,6 +16,11 @@ int main(int argc, char* argv[])
     if (!file.good()) {
         std::cout << "error file" << std::endl;
     }
+
+    //
+    Compilator c;
+    c.compile(&file);
+    //
 
     Story s1 = Story();
     if (s1.loadStory(&file) == 0) {
