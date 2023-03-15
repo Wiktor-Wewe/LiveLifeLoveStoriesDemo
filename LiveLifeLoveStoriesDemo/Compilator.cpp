@@ -18,6 +18,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadCharacter(file);
             break;
         case 2: // cce
+            std::cout << "try to handle cce header" << std::endl;
+            this->_loadCCE(file);
             break;
         case 3: // event
             break;
@@ -74,6 +76,30 @@ void Compilator::_loadCharacter(std::fstream* file)
     this->_Characters.push_back(Character(id, name, sprites));
 }
 
+void Compilator::_loadCCE(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::string text;
+    std::vector<std::vector<std::string>> clothes;
+    int nextMessageId;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+
+    std::getline(*file, line);
+    text = this->_readText(line);
+
+    std::getline(*file, line);
+    clothes = this->_readDoubleVectorText(file);
+
+    std::getline(*file, line);
+    nextMessageId = this->_readId(line);
+
+    this->_CCEvents.push_back(ChooseClothesEvent(id, text, clothes, nextMessageId));
+}
+
 int Compilator::_readId(std::string line)
 {
     line = this->cutString(line, line.find(":")+1, line.size()-1);
@@ -89,7 +115,50 @@ std::string Compilator::_readText(std::string line)
 std::vector<std::string> Compilator::_readVectorText(std::string line)
 {
     std::vector<std::string> list;
-    //to do
+    std::string buff;
+    int quote = 0;
+
+    line = this->cutString(line, line.find("\""), line.size());
+
+    for (int i = 0; i < line.size(); i++) {
+        if (line[i] == '"') {
+            quote++;
+        }
+        if (quote % 2 == 1 && line[i] != '"') {
+            buff += line[i];
+        }
+        if (line[i] == ',' || line[i] == ';') {
+            list.push_back(buff);
+            buff.clear();
+        }
+    }
+
+    return list;
+}
+
+std::vector<std::vector<std::string>> Compilator::_readDoubleVectorText(std::fstream* file)
+{
+    std::vector<std::vector<std::string>> list;
+    std::vector<std::string> listOfPaths;
+    std::string buff;
+
+    std::getline(*file, buff);
+
+    while (buff[0] != '}') {
+        std::getline(*file, buff);
+        if (buff[0] != '}') {
+            listOfPaths = this->_readVectorText(buff);
+            list.push_back(listOfPaths);
+        }
+    }
+    
+    for (int y = 0; y < list.size(); y++) {
+        for (int x = 0; x < list[y].size(); x++) {
+            std::cout << list[y][x] << " - ";
+        }
+        std::cout << std::endl;
+    }
+
     return list;
 }
 

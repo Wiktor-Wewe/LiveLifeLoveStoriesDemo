@@ -32,9 +32,11 @@ private:
 	void _loadFileToMemmory(std::fstream* file);
 	int _findHeader(std::string line);
 	void _loadCharacter(std::fstream* file);
+	void _loadCCE(std::fstream* file);
 	int _readId(std::string line);
 	std::string _readText(std::string line);
 	std::vector<std::string> _readVectorText(std::string line);
+	std::vector<std::vector<std::string>> _readDoubleVectorText(std::fstream* file);
 
 	std::string cutString(std::string line, int start, int end);
 };
