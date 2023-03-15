@@ -22,6 +22,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadCCE(file);
             break;
         case 3: // event
+            std::cout << "try to handle event header" << std::endl;
+            this->_loadEvent(file);
             break;
         case 4: // image
             break;
@@ -34,7 +36,7 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
         case 8: // sfx
             break;
         default:
-            std::cout << "cant handle header: " << line << std::endl;
+            std::cout << "skipped line: " << line << std::endl;
             break;
         }
     }
@@ -100,6 +102,38 @@ void Compilator::_loadCCE(std::fstream* file)
     this->_CCEvents.push_back(ChooseClothesEvent(id, text, clothes, nextMessageId));
 }
 
+void Compilator::_loadEvent(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::vector<std::string> playerOptions;
+    std::vector<int> nextMessages;
+    std::vector<int> nextEvents;
+    int mpeid;
+    int cceid;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+
+    std::getline(*file, line);
+    playerOptions = this->_readVectorText(line);
+
+    std::getline(*file, line);
+    nextMessages = this->_readVectorInt(line);
+
+    std::getline(*file, line);
+    nextEvents = this->_readVectorInt(line);
+
+    std::getline(*file, line);
+    mpeid = this->_readId(line);
+
+    std::getline(*file, line);
+    cceid = this->_readId(line);
+
+    this->_Events.push_back(Event(id, playerOptions, nextMessages, nextEvents, mpeid, cceid));
+}
+
 int Compilator::_readId(std::string line)
 {
     line = this->cutString(line, line.find(":")+1, line.size()-1);
@@ -110,6 +144,12 @@ std::string Compilator::_readText(std::string line)
 {
     line = this->cutString(line, line.find("\"")+1, line.size() - 2);
     return line;
+}
+
+std::vector<int> Compilator::_readVectorInt(std::string line)
+{
+    //to do
+    return std::vector<int>();
 }
 
 std::vector<std::string> Compilator::_readVectorText(std::string line)
@@ -150,13 +190,6 @@ std::vector<std::vector<std::string>> Compilator::_readDoubleVectorText(std::fst
             listOfPaths = this->_readVectorText(buff);
             list.push_back(listOfPaths);
         }
-    }
-    
-    for (int y = 0; y < list.size(); y++) {
-        for (int x = 0; x < list[y].size(); x++) {
-            std::cout << list[y][x] << " - ";
-        }
-        std::cout << std::endl;
     }
 
     return list;
