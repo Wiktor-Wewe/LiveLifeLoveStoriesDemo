@@ -38,6 +38,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadMessage(file);
             break;
         case 7: // music
+            std::cout << "try to handle music header" << std::endl;
+            this->_loadMusic(file);
             break;
         case 8: // sfx
             break;
@@ -238,6 +240,26 @@ void Compilator::_loadMessage(std::fstream* file)
     nextevent = this->_readId(line);
 
     this->_Messages.push_back(Message(id, text, musicid, sfxid, spriteid, clothesid, bgimageid, nextmessage, nextevent));
+}
+
+void Compilator::_loadMusic(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::string name;
+    std::string path;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+
+    std::getline(*file, line);
+    name = this->_readText(line);
+
+    std::getline(*file, line);
+    path = this->_readText(line);
+
+    this->_Musics.push_back(Music(id, name, path));
 }
 
 int Compilator::_readId(std::string line)
