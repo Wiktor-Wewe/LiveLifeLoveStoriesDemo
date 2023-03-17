@@ -26,6 +26,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadEvent(file);
             break;
         case 4: // image
+            std::cout << "try to handle image header" << std::endl;
+            this->_loadImage(file);
             break;
         case 5: // mpe
             break;
@@ -132,6 +134,26 @@ void Compilator::_loadEvent(std::fstream* file)
     cceid = this->_readId(line);
 
     this->_Events.push_back(Event(id, playerOptions, nextMessages, nextEvents, mpeid, cceid));
+}
+
+void Compilator::_loadImage(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::string name;
+    std::string path;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+
+    std::getline(*file, line);
+    name = this->_readText(line);
+
+    std::getline(*file, line);
+    path = this->_readText(line);
+
+    this->_Images.push_back(Image(id, name, path));
 }
 
 int Compilator::_readId(std::string line)

@@ -34,6 +34,7 @@ private:
 	void _loadCharacter(std::fstream* file);
 	void _loadCCE(std::fstream* file);
 	void _loadEvent(std::fstream* file);
+	void _loadImage(std::fstream* file);
 
 	int _readId(std::string line);
 	std::string _readText(std::string line);
