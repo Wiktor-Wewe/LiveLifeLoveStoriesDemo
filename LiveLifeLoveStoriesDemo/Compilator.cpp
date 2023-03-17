@@ -34,6 +34,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadMPE(file);
             break;
         case 6: // message
+            std::cout << "try to handle message header" << std::endl;
+            this->_loadMessage(file);
             break;
         case 7: // music
             break;
@@ -192,6 +194,50 @@ void Compilator::_loadMPE(std::fstream* file)
     nextmessageid = this->_readId(line);
 
     this->_MPEvent = new MakeProtagonistEvent(id, name, text, faces, skins, hairs, nextmessageid);
+}
+
+void Compilator::_loadMessage(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::string text;
+    std::vector<int> musicid;
+    std::vector<int> sfxid;
+    int spriteid;
+    int clothesid;
+    int bgimageid;
+    int nextmessage;
+    int nextevent;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+
+    std::getline(*file, line);
+    text = this->_readText(line);
+
+    std::getline(*file, line);
+    musicid = this->_readVectorInt(line);
+    
+    std::getline(*file, line);
+    sfxid = this->_readVectorInt(line);
+
+    std::getline(*file, line);
+    spriteid = this->_readId(line);
+
+    std::getline(*file, line);
+    clothesid = this->_readId(line);
+
+    std::getline(*file, line);
+    bgimageid = this->_readId(line);
+
+    std::getline(*file, line);
+    nextmessage = this->_readId(line);
+
+    std::getline(*file, line);
+    nextevent = this->_readId(line);
+
+    this->_Messages.push_back(Message(id, text, musicid, sfxid, spriteid, clothesid, bgimageid, nextmessage, nextevent));
 }
 
 int Compilator::_readId(std::string line)
