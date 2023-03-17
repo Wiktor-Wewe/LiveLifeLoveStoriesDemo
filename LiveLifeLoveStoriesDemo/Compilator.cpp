@@ -148,8 +148,24 @@ std::string Compilator::_readText(std::string line)
 
 std::vector<int> Compilator::_readVectorInt(std::string line)
 {
-    //to do
-    return std::vector<int>();
+    std::vector<int> list;
+    std::string s;
+    int l;
+
+    line = this->cutString(line, line.find(":") + 1, line.size());
+    for (int i = 0; i < line.size(); i++) {
+        if (line[i] != ' ' && line[i] != ',' && line[i] != ';') {
+            s += line[i];
+        }
+
+        if (line[i] == ',' || line[i] == ';') {
+            l = std::stoi(s);
+            list.push_back(l);
+            s.clear();
+        }
+    }
+
+    return list;
 }
 
 std::vector<std::string> Compilator::_readVectorText(std::string line)
