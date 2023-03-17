@@ -1,11 +1,12 @@
 #include "Compilator.h"
 
-void Compilator::compile(std::fstream* file)
+void Compilator::compile(std::fstream* file, std::string fileName)
 {
-	this->_loadFileToMemmory(file);
+	this->_loadFileToMemory(file);
+    this->_writeMemoryToFile(fileName);
 }
 
-void Compilator::_loadFileToMemmory(std::fstream* file)
+void Compilator::_loadFileToMemory(std::fstream* file)
 {
 	std::string line;
 
@@ -46,12 +47,10 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadSfx(file);
             break;
         default:
-            std::cout << "skipped line: " << line << std::endl;
+            //std::cout << "skipped line: " << line << std::endl;
             break;
         }
     }
-	
-
 }
 
 int Compilator::_findHeader(std::string line)
@@ -368,4 +367,9 @@ std::string Compilator::cutString(std::string line, int start, int end)
         result += line[i];
     }
     return result;
+}
+
+void Compilator::_writeMemoryToFile(std::string FileName)
+{
+    //makeMewName
 }

@@ -16,7 +16,7 @@
 class Compilator
 {
 public:
-	void compile(std::fstream* file);
+	void compile(std::fstream* file, std::string fileName);
 
 private:
 	std::vector<Character> _Characters;
@@ -29,7 +29,8 @@ private:
 	Protagonist* _Player;
 	std::vector<Sfx> _Sfxs;
 
-	void _loadFileToMemmory(std::fstream* file);
+	//read
+	void _loadFileToMemory(std::fstream* file);
 	int _findHeader(std::string line);
 	void _loadCharacter(std::fstream* file);
 	void _loadCCE(std::fstream* file);
@@ -47,5 +48,8 @@ private:
 	std::vector<std::vector<std::string>> _readDoubleVectorText(std::fstream* file);
 
 	std::string cutString(std::string line, int start, int end);
+
+	//write
+	void _writeMemoryToFile(std::string fileName);
 };
 

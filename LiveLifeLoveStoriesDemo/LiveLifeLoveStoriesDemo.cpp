@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
     //
     Compilator c;
-    c.compile(&file);
+    c.compile(&file, argv[1]);
     //
 
     Story s1 = Story();
