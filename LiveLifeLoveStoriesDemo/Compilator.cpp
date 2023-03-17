@@ -30,6 +30,8 @@ void Compilator::_loadFileToMemmory(std::fstream* file)
             this->_loadImage(file);
             break;
         case 5: // mpe
+            std::cout << "try to handle mpe header" << std::endl;
+            this->_loadMPE(file);
             break;
         case 6: // message
             break;
@@ -154,6 +156,39 @@ void Compilator::_loadImage(std::fstream* file)
     path = this->_readText(line);
 
     this->_Images.push_back(Image(id, name, path));
+}
+
+void Compilator::_loadMPE(std::fstream* file)
+{
+    std::string line;
+
+    int id;
+    std::string name;
+    std::string text;
+    std::vector<std::vector<std::string>> faces;
+    std::vector<std::vector<std::string>> skins;
+    std::vector<std::vector<std::string>> hairs;
+    int nextmessageid;
+
+    std::getline(*file, line);
+    id = this->_readId(line);
+    
+    std::getline(*file, line);
+    name = this->_readText(line);
+
+    std::getline(*file, line);
+    faces = this->_readDoubleVectorText(file);
+
+    std::getline(*file, line);
+    skins = this->_readDoubleVectorText(file);
+
+    std::getline(*file, line);
+    hairs = this->_readDoubleVectorText(file);
+
+    std::getline(*file, line);
+    nextmessageid = this->_readId(line);
+
+    this->_MPEvent = new MakeProtagonistEvent(id, name, text, faces, skins, hairs, nextmessageid);
 }
 
 int Compilator::_readId(std::string line)
