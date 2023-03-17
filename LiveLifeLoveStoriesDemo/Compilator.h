@@ -38,6 +38,7 @@ private:
 	void _loadMPE(std::fstream* file);
 	void _loadMessage(std::fstream* file);
 	void _loadMusic(std::fstream* file);
+	void _loadSfx(std::fstream* file);
 
 	int _readId(std::string line);
 	std::string _readText(std::string line);
