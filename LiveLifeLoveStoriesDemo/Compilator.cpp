@@ -177,6 +177,9 @@ void Compilator::_loadMPE(std::fstream* file)
     name = this->_readText(line);
 
     std::getline(*file, line);
+    text = this->_readText(line);
+
+    std::getline(*file, line);
     faces = this->_readDoubleVectorText(file);
 
     std::getline(*file, line);
