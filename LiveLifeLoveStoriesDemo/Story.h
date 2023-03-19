@@ -17,6 +17,11 @@ class Story
 public:
 	Story()
 	{
+		this->_name = std::string();
+		this->_info = std::string();
+		this->_author = std::string();
+		this->_date = std::string();
+
 		this->_Characters = std::vector<Character>();
 		this->_CCEvents = std::vector<ChooseClothesEvent>();
 		this->_Events = std::vector<Event>();
@@ -27,6 +32,11 @@ public:
 		this->_Player = (Protagonist*)malloc(sizeof(Protagonist));
 		this->_Sfxs = std::vector<Sfx>();
 	}
+
+	std::string getName();
+	std::string getInfo();
+	std::string getAuthor();
+	std::string getDate();
 
 	int loadStory(std::fstream* file);
 	int loadStoryFake(std::fstream* file);
@@ -43,6 +53,11 @@ private:
 	Protagonist* _Player;
 	std::vector<Sfx> _Sfxs;
 
+	std::string _name;
+	std::string _info;
+	std::string _author;
+	std::string _date;
+
 	Event* _findEventById(int id);
 	Message* _findMessageById(int id);
 	MakeProtagonistEvent* _getMpei();
@@ -51,6 +66,12 @@ private:
 
 	std::string cutStringWhile(std::string text, int begin, char end);
 	std::vector<std::string> str2vecstr(std::string text);
+
+	void _setName(std::string name);
+	void _setInfo(std::string info);
+	void _setAuthor(std::string author);
+	void _setDate(std::string date);
+
 	int _isHeader(std::string text);
 	void _loadCharacter(std::fstream* file);
 	void _loadCCE(std::fstream* file);

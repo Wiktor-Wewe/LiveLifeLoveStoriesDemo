@@ -1,5 +1,25 @@
 #include "Story.h"
 
+std::string Story::getName()
+{
+    return this->_name;
+}
+
+std::string Story::getInfo()
+{
+    return this->_info;
+}
+
+std::string Story::getAuthor()
+{
+    return this->_author;
+}
+
+std::string Story::getDate()
+{
+    return this->_date;
+}
+
 int Story::loadStory(std::fstream* file)
 {
     std::string buff;
@@ -358,6 +378,26 @@ std::vector<std::string> Story::str2vecstr(std::string text)
     }
 
     return list;
+}
+
+void Story::_setName(std::string name)
+{
+    this->_name = name;
+}
+
+void Story::_setInfo(std::string info)
+{
+    this->_info = info;
+}
+
+void Story::_setAuthor(std::string author)
+{
+    this->_author = author;
+}
+
+void Story::_setDate(std::string date)
+{
+    this->_date = date;
 }
 
 int Story::_isHeader(std::string text)

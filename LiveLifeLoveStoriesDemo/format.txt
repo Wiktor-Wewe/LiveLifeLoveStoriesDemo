@@ -6,3 +6,150 @@ LiveLifeLoveStoriesDemo script.wes - compile and make script.wesc
 LiveLifeLoveStoriesDemo -f script.* - force compile and make script.wesc
 LiveLifeLoveStoriesDemo script.wesc - play story
 LiveLifeLoveStoriesDemo -p script.* - force play story
+
+wesc stucture:
+<HEADER>
+size 0x12:
+wewescriptcompiled in hex
+
+size 0x02:
+0000
+
+size 0x08:
+size of file
+
+size 0x04: size of story name
+---------: story name
+
+size 0x04: size of story info
+---------: story info
+
+size 0x04: size of story author
+---------: story author
+
+size 0x04: size of story date
+---------: story date
+
+size 0x02:
+FFFF
+
+<INFO>
+[0x01] = character header:
+	size 0x04: number of characters
+	for each character:
+		size 0x04: id
+		size 0x04: size of name
+		---------: name
+		size 0x04: number of spritesPaths
+			for each path:
+			size 0x04: size of path
+			---------: path
+	
+[0x02] = cce header:
+	size 0x04: number of cce
+	for each cce:
+		size 0x04: id
+		size 0x04: size of text
+		---------: text
+		size 0x04: size of clothes Y
+			for each clothes Y:
+			size 0x04: size of clothes X
+				for each clothes X
+				size 0x04: size of path
+				---------: path
+		size 0x04: next message id
+
+[0x03] = event header:
+	size 0x04: number of events
+	for each event:
+		size 0x04: id
+		size 0x04: number of player options
+		for each player option:
+			size 0x04: size of player option
+			---------: player option
+		size 0x04: number of next messages
+		for each next message:
+			size 0x04: next message
+		size 0x04: number of next events
+		for each next evet:
+			size 0x04: next event
+		size 0x04: mpei
+		size 0x04: ccei
+	
+[0x04] = image header:
+	size 0x04: number of images
+	for each image:
+		size 0x04: id
+		size 0x04: size of name
+		---------: name
+		size 0x04: size of path
+		---------: path
+
+[0x05] = mpe header:
+	size 0x04: number of mpe
+	for each mpe:
+		size 0x04: id
+		size 0x04: size of name
+		---------: name
+		size 0x04: size of text
+		---------: text
+		size 0x04: size of faces Y
+			for each face Y:
+			size 0x04: size of faces X
+				for each face X
+				size 0x04: size of face
+				---------: face
+		size 0x04: size of skins Y
+			for each skin Y:
+			size 0x04: size of skins X
+				for each skin X
+				size 0x04: size of skin
+				---------: skin
+		size 0x04: size of hairs Y
+			for each hair Y:
+			size 0x04: size of hairs X
+				for each hair X
+				size 0x04: size of hair
+				---------: hair
+		size 0x04: next message id
+
+[0x06] = message header:
+	size 0x04: number of messages
+	for each message:
+		size 0x04: id
+		size 0x04: size of text
+		---------: text
+		size 0x04: number of music id
+		for each music id:
+			size 0x04: music id
+		size 0x04: number of sfx id
+		for each sfx id:
+			size 0x04: sfx id
+		size 0x04: sprite id
+		size 0x04: clothes id
+		size 0x04: bg image id
+		size 0x04: next message
+		size 0x04: next event
+
+[0x07] = music header:
+	size 0x04: number of musics
+	for each music:
+		size 0x04: id
+		size 0x04: size of name
+		---------: name
+		size 0x04: size of path
+		---------: path
+
+[0x08] = sfx header:
+	size 0x04: number of sfx
+	for each sfx:
+		size 0x04: id
+		size 0x04: size of name
+		---------: name
+		size 0x04: size of path
+		---------: path
+
+size 0x04: size of compilation info
+---------: compilation info
+
+0x00ff00ff = end
