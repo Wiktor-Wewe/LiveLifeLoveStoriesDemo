@@ -412,11 +412,10 @@ std::string Compilator::cutString(std::string line, int start, int end)
 
 void Compilator::_writeMemoryToFile(std::string FileName)
 {
-    std::fstream compiledFile;
+    std::fstream compiledFile(this->_makeNewName(FileName), std::ios::out | std::ios::binary);
     short sNULL = 0x0000;
     double sizeOfFile = 0x00000000;
 
-    compiledFile.open(this->_makeNewName(FileName), std::ios::out, std::ios::binary);
     // write header
     compiledFile.write(reinterpret_cast<const char*>("wewescriptcompiled"), 0x12); // type
     compiledFile.write(reinterpret_cast<const char*>(&sNULL), sizeof(short)); // just NULL
@@ -467,21 +466,21 @@ void Compilator::_writeFileInfo(std::fstream* file)
     int sizeOfName = this->_name.size();
     int sizeOfInfo = this->_info.size();
     int sizeOfAuthor = this->_author.size();
-    std::uint32_t sizeOfDate = strlen(this->_date.c_str());
+    int sizeOfDate = this->_date.size();
 
-    //file->write(reinterpret_cast<const char*>(&sizeOfName), sizeof(int));
-    //file->write(this->_name.c_str(), this->_name.size());
+    file->write(reinterpret_cast<const char*>(&sizeOfName), sizeof(int));
+    file->write(this->_name.c_str(), this->_name.size());
 
-    //file->write(reinterpret_cast<const char*>(&sizeOfInfo), sizeof(int));
-    //file->write(this->_info.c_str(), this->_info.size());
+    file->write(reinterpret_cast<const char*>(&sizeOfInfo), sizeof(int));
+    file->write(this->_info.c_str(), this->_info.size());
 
-    //file->write(reinterpret_cast<const char*>(&sizeOfAuthor), sizeof(int));
-    //file->write(this->_author.c_str(), this->_author.size());
+    file->write(reinterpret_cast<const char*>(&sizeOfAuthor), sizeof(int));
+    file->write(this->_author.c_str(), this->_author.size());
 
     file->write(reinterpret_cast<const char*>(&sizeOfDate), sizeof(sizeOfDate));
     file->write(this->_date.c_str(), this->_date.size());
 
-    //file->write(reinterpret_cast<const char*>(&ffff), sizeof(short));
+    file->write(reinterpret_cast<const char*>(&ffff), sizeof(short));
 }
 
 void Compilator::_writeCharacters(std::fstream* file)
