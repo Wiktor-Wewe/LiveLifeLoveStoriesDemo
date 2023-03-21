@@ -19,6 +19,7 @@ public:
 	void compile(std::fstream* file, std::string fileName);
 
 private:
+
 	std::vector<Character> _Characters;
 	std::vector<ChooseClothesEvent> _CCEvents;
 	std::vector<Event> _Events;
@@ -29,9 +30,18 @@ private:
 	Protagonist* _Player;
 	std::vector<Sfx> _Sfxs;
 
+	std::string _name;
+	std::string _info;
+	std::string _author;
+	std::string _date;
+
 	//read
 	void _loadFileToMemory(std::fstream* file);
 	int _findHeader(std::string line);
+	void _loadName(std::string line);
+	void _loadInfo(std::string line);
+	void _loadAuthor(std::string line);
+	void _loadDate(std::string line);
 	void _loadCharacter(std::fstream* file);
 	void _loadCCE(std::fstream* file);
 	void _loadEvent(std::fstream* file);
@@ -51,5 +61,9 @@ private:
 
 	//write
 	void _writeMemoryToFile(std::string fileName);
+	std::string _makeNewName(std::string fileName);
+	
+	void _writeFileInfo(std::fstream* file);
+	void _writeCharacters(std::fstream* file);
 };
 

@@ -9,6 +9,27 @@ void Compilator::compile(std::fstream* file, std::string fileName)
 void Compilator::_loadFileToMemory(std::fstream* file)
 {
 	std::string line;
+    
+    std::cout << "try to handle info of script" << std::endl;
+    
+    std::getline(*file, line);
+    this->_loadName(line);
+
+    std::getline(*file, line);
+    this->_loadInfo(line);
+
+    std::getline(*file, line);
+    this->_loadAuthor(line);
+
+    std::getline(*file, line);
+    this->_loadDate(line);
+
+    std::cout << "name: " << this->_name << std::endl;
+    std::cout << "info: " << this->_info << std::endl;
+    std::cout << "author: " << this->_author << std::endl;
+    std::cout << "date: " << this->_date << std::endl;
+    std::cout << std::endl;
+
 
     while (!file->eof()) {
         std::getline(*file, line);
@@ -65,6 +86,26 @@ int Compilator::_findHeader(std::string line)
     if (line.find("<sfx>") != std::string::npos) return 8;
 
 	return 0;
+}
+
+void Compilator::_loadName(std::string line)
+{
+    this->_name = this->_readText(line);
+}
+
+void Compilator::_loadInfo(std::string line)
+{
+    this->_info = this->_readText(line);
+}
+
+void Compilator::_loadAuthor(std::string line)
+{
+    this->_author = this->_readText(line);
+}
+
+void Compilator::_loadDate(std::string line)
+{
+    this->_date = this->_readText(line);
 }
 
 void Compilator::_loadCharacter(std::fstream* file)
@@ -371,5 +412,79 @@ std::string Compilator::cutString(std::string line, int start, int end)
 
 void Compilator::_writeMemoryToFile(std::string FileName)
 {
-    //makeMewName
+    std::fstream compiledFile;
+    short sNULL = 0x0000;
+    double sizeOfFile = 0x00000000;
+
+    compiledFile.open(this->_makeNewName(FileName), std::ios::out, std::ios::binary);
+    // write header
+    compiledFile.write(reinterpret_cast<const char*>("wewescriptcompiled"), 0x12); // type
+    compiledFile.write(reinterpret_cast<const char*>(&sNULL), sizeof(short)); // just NULL
+    compiledFile.write(reinterpret_cast<const char*>(&sizeOfFile), sizeof(double)); // for size of file
+    
+    this->_writeFileInfo(&compiledFile);
+    this->_writeCharacters(&compiledFile);
+    // _write cce
+    // _write events
+    // _write images
+    // _write mpe
+    // _write messages
+    // _write musics
+    // _write sfx
+    // _write compilation info/
+    // write end of file
+    // overwrite size of file
+    compiledFile.close();
+    std::cout << "compilation complete" << std::endl;
+    std::cout << "file: " << this->_makeNewName(FileName) << " was created" << std::endl;
+}
+
+std::string Compilator::_makeNewName(std::string fileName)
+{
+    std::string newName;
+
+    if (fileName.size() > 4) {
+        if (fileName[fileName.size() - 1] == 's' &&
+            fileName[fileName.size() - 2] == 'e' &&
+            fileName[fileName.size() - 3] == 'w' &&
+            fileName[fileName.size() - 4] == '.'
+        ) {
+            return fileName + 'c';
+        }
+    }
+
+    for (int i = 0; i < fileName.size(); i++) {
+        if (i == fileName.find_last_of('.')) {
+            return newName + ".wesc";
+        }
+        newName += fileName[i];
+    }
+}
+
+void Compilator::_writeFileInfo(std::fstream* file)
+{
+    short ffff = 0xffff;
+    int sizeOfName = this->_name.size();
+    int sizeOfInfo = this->_info.size();
+    int sizeOfAuthor = this->_author.size();
+    std::uint32_t sizeOfDate = strlen(this->_date.c_str());
+
+    //file->write(reinterpret_cast<const char*>(&sizeOfName), sizeof(int));
+    //file->write(this->_name.c_str(), this->_name.size());
+
+    //file->write(reinterpret_cast<const char*>(&sizeOfInfo), sizeof(int));
+    //file->write(this->_info.c_str(), this->_info.size());
+
+    //file->write(reinterpret_cast<const char*>(&sizeOfAuthor), sizeof(int));
+    //file->write(this->_author.c_str(), this->_author.size());
+
+    file->write(reinterpret_cast<const char*>(&sizeOfDate), sizeof(sizeOfDate));
+    file->write(this->_date.c_str(), this->_date.size());
+
+    //file->write(reinterpret_cast<const char*>(&ffff), sizeof(short));
+}
+
+void Compilator::_writeCharacters(std::fstream* file)
+{
+
 }
