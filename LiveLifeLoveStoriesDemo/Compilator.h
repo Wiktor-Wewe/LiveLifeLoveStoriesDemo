@@ -65,5 +65,6 @@ private:
 	
 	void _writeFileInfo(std::fstream* file);
 	void _writeCharacters(std::fstream* file);
+	void _writeCCE(std::fstream* file);
 };
 

@@ -423,7 +423,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     
     this->_writeFileInfo(&compiledFile);
     this->_writeCharacters(&compiledFile);
-    // _write cce
+    this->_writeCCE(&compiledFile);
     // _write events
     // _write images
     // _write mpe
@@ -477,7 +477,7 @@ void Compilator::_writeFileInfo(std::fstream* file)
     file->write(reinterpret_cast<const char*>(&sizeOfAuthor), sizeof(int));
     file->write(this->_author.c_str(), this->_author.size());
 
-    file->write(reinterpret_cast<const char*>(&sizeOfDate), sizeof(sizeOfDate));
+    file->write(reinterpret_cast<const char*>(&sizeOfDate), sizeof(int));
     file->write(this->_date.c_str(), this->_date.size());
 
     file->write(reinterpret_cast<const char*>(&ffff), sizeof(short));
@@ -485,5 +485,74 @@ void Compilator::_writeFileInfo(std::fstream* file)
 
 void Compilator::_writeCharacters(std::fstream* file)
 {
+    short characterHeader = 0x0001;
+    short numberOfCharacters = this->_Characters.size();
+    short buff;
 
+    // write character header
+    file->write(reinterpret_cast<const char*>(&characterHeader), sizeof(short));
+    
+    // write number of characters
+    file->write(reinterpret_cast<const char*>(&numberOfCharacters), sizeof(short));
+
+    for (int i = 0; i < this->_Characters.size(); i++) {
+        // write id
+        buff = this->_Characters[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        // write size of name and name
+        buff = this->_Characters[i].getName().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Characters[i].getName().c_str(), this->_Characters[i].getName().size());
+        // write number of spirites
+        buff = this->_Characters[i].getSprites().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        // write all size of path and path
+        for (int j = 0; j < this->_Characters[i].getSprites().size(); j++) {
+            buff = this->_Characters[i].getSprites()[j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            file->write(this->_Characters[i].getSprites()[j].c_str(), this->_Characters[i].getSprites()[j].size());
+        }
+    }
+}
+
+void Compilator::_writeCCE(std::fstream* file)
+{
+    short CCEHeader = 0x0002;
+    short numberOfCCE = this->_CCEvents.size();
+    short buff;
+
+    // write cce header
+    file->write(reinterpret_cast<const char*>(&CCEHeader), sizeof(short));
+
+    // write number of cce
+    file->write(reinterpret_cast<const char*>(&numberOfCCE), sizeof(short));
+
+    for (int i = 0; i < this->_CCEvents.size(); i++) {
+        // write id
+        buff = this->_CCEvents[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        // write size of text and text
+        buff = this->_CCEvents[i].getText().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_CCEvents[i].getText().c_str(), this->_CCEvents[i].getText().size());
+        // write number of vectors y
+        buff = this->_CCEvents[i].getClothes().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        // write info from vectors y
+        for (int j = 0; j < this->_CCEvents[i].getClothes().size(); j++) {
+            // write number of vectors x
+            buff = this->_CCEvents[i].getClothes()[j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            // write info from vectors x
+            for (int k = 0; k < this->_CCEvents[i].getClothes()[j].size(); k++) {
+                // write size of paths and paths
+                buff = this->_CCEvents[i].getClothes()[j][k].size();
+                file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+                file->write(this->_CCEvents[i].getClothes()[j][k].c_str(), this->_CCEvents[i].getClothes()[j][k].size());
+            }
+        }
+        // write next message id
+        buff = this->_CCEvents[i].getNextMessageId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    }
 }

@@ -13,6 +13,9 @@ public:
 		this->_currentSprite = 0;
 	}
 	int getId();
+	std::string getName();
+	std::vector<std::string> getSprites();
+
 
 private:
 	
