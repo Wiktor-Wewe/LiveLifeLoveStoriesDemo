@@ -424,7 +424,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeFileInfo(&compiledFile);
     this->_writeCharacters(&compiledFile);
     this->_writeCCE(&compiledFile);
-    // _write events
+    this->_writeEvents(&compiledFile);
     // _write images
     // _write mpe
     // _write messages
@@ -555,4 +555,66 @@ void Compilator::_writeCCE(std::fstream* file)
         buff = this->_CCEvents[i].getNextMessageId();
         file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
     }
+}
+
+void Compilator::_writeEvents(std::fstream* file)
+{
+    short EventHeader = 0x0003;
+    short numberOfEvents = this->_Events.size();
+    short buff;
+
+    // write event header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write number of events
+    file->write(reinterpret_cast<const char*>(&numberOfEvents), sizeof(short));
+
+    for (int i = 0; i < this->_Events.size(); i++) {
+        // write id
+        buff = this->_Events[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write number of player options
+        buff = this->_Events[i].getPlayerOptions().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write all player options
+        for (int j = 0; j < this->_Events[i].getPlayerOptions().size(); j++) {
+            // write size of player option and player option
+            buff = this->_Events[i].getPlayerOptions()[j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            file->write(this->_Events[i].getPlayerOptions()[j].c_str(), this->_Events[i].getPlayerOptions()[j].size());
+        }
+
+        // write number of next messages
+        buff = this->_Events[i].getNextMessages().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write all next messages
+        for (int j = 0; j < this->_Events[i].getNextMessages().size(); j++) {
+            // write next message id
+            buff = this->_Events[i].getNextMessages()[j];
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        }
+
+        // write number of next events
+        buff = this->_Events[i].getNextEvents().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write all next events
+        for (int j = 0; j < this->_Events[i].getNextEvents().size(); j++) {
+            // write next event id
+            buff = this->_Events[i].getNextEvents()[j];
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        }
+
+        // write mpei
+        buff = this->_Events[i].getMpei();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write ccei
+        buff = this->_Events[i].getCcei();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    }
+
 }
