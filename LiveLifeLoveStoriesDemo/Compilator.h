@@ -69,5 +69,6 @@ private:
 	void _writeEvents(std::fstream* file);
 	void _writeImages(std::fstream* file);
 	void _writeMPE(std::fstream* file);
+	void _writeMessages(std::fstream* file);
 };
 

@@ -427,11 +427,10 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeEvents(&compiledFile);
     this->_writeImages(&compiledFile);
     this->_writeMPE(&compiledFile);
-    // _write messages
+    this->_writeMessages(&compiledFile);
     // _write musics
     // _write sfx
-    // _write compilation info/
-    // write end of file
+    // _write compilation info and end of file
     // overwrite size of file
     compiledFile.close();
     std::cout << "compilation complete" << std::endl;
@@ -729,4 +728,66 @@ void Compilator::_writeMPE(std::fstream* file)
     // write next message id
     buff = this->_MPEvent->getNextMessageId();
     file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+}
+
+void Compilator::_writeMessages(std::fstream* file)
+{
+    short EventHeader = 0x0006;
+    short numberOfMessages = this->_Messages.size();
+    short buff;
+
+    // write messages header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write number of messages
+    file->write(reinterpret_cast<const char*>(&numberOfMessages), sizeof(short));
+
+    for (int i = 0; i < this->_Messages.size(); i++) {
+        // write id
+        buff = this->_Messages[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write size of text and text
+        buff = this->_Messages[i].getText().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Messages[i].getText().c_str(), this->_Messages[i].getText().size());
+
+        // write number of music id and all music id
+        buff = this->_Messages[i].getAllMusicId().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        
+        for (int j = 0; j < this->_Messages[i].getAllMusicId().size(); j++) {
+            buff = this->_Messages[i].getAllMusicId()[j];
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        }
+
+        // write number of sfx id and all sfx id
+        buff = this->_Messages[i].getAllSfxId().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        for (int j = 0; j < this->_Messages[i].getAllSfxId().size(); j++) {
+            buff = this->_Messages[i].getAllSfxId()[j];
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        }
+
+        // write sprite id
+        buff = this->_Messages[i].getSpriteId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write clothes id
+        buff = this->_Messages[i].getClothesId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write bg image id
+        buff = this->_Messages[i].getBgImageId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write next message id
+        buff = this->_Messages[i].getNextMessage();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write next event id
+        buff = this->_Messages[i].getNextEvent();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    }
 }

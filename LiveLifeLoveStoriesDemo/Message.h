@@ -20,6 +20,11 @@ public:
 	}
 	int getId();
 	std::string getText();
+	std::vector<int> getAllMusicId();
+	std::vector<int> getAllSfxId();
+	int getSpriteId();
+	int getClothesId();
+	int getBgImageId();
 	int getNextMessage();
 	int getNextEvent();
 
