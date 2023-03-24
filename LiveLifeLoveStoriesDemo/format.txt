@@ -34,7 +34,7 @@ size 0x02:
 FFFF
 
 <INFO>
-[0x01] = character header:
+[0x0001] = character header:
 	size 0x04: number of characters
 	for each character:
 		size 0x04: id
@@ -45,7 +45,7 @@ FFFF
 			size 0x04: size of path
 			---------: path
 	
-[0x02] = cce header:
+[0x0002] = cce header:
 	size 0x04: number of cce
 	for each cce:
 		size 0x04: id
@@ -59,7 +59,7 @@ FFFF
 				---------: path
 		size 0x04: next message id
 
-[0x03] = event header:
+[0x0003] = event header:
 	size 0x04: number of events
 	for each event:
 		size 0x04: id
@@ -76,7 +76,7 @@ FFFF
 		size 0x04: mpei
 		size 0x04: ccei
 	
-[0x04] = image header:
+[0x0004] = image header:
 	size 0x04: number of images
 	for each image:
 		size 0x04: id
@@ -85,8 +85,8 @@ FFFF
 		size 0x04: size of path
 		---------: path
 
-[0x05] = mpe header:
-	size 0x04: number of mpe
+[0x0005] = mpe header:
+	size 0x04: number of mpe <- do wyjebania
 	for each mpe:
 		size 0x04: id
 		size 0x04: size of name
@@ -113,7 +113,7 @@ FFFF
 				---------: hair
 		size 0x04: next message id
 
-[0x06] = message header:
+[0x0006] = message header:
 	size 0x04: number of messages
 	for each message:
 		size 0x04: id
@@ -131,7 +131,7 @@ FFFF
 		size 0x04: next message
 		size 0x04: next event
 
-[0x07] = music header:
+[0x0007] = music header:
 	size 0x04: number of musics
 	for each music:
 		size 0x04: id
@@ -140,7 +140,7 @@ FFFF
 		size 0x04: size of path
 		---------: path
 
-[0x08] = sfx header:
+[0x0008] = sfx header:
 	size 0x04: number of sfx
 	for each sfx:
 		size 0x04: id

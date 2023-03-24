@@ -426,7 +426,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeCCE(&compiledFile);
     this->_writeEvents(&compiledFile);
     this->_writeImages(&compiledFile);
-    // _write mpe
+    this->_writeMPE(&compiledFile);
     // _write messages
     // _write musics
     // _write sfx
@@ -645,4 +645,88 @@ void Compilator::_writeImages(std::fstream* file)
         file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
         file->write(this->_Images[i].getPath().c_str(), this->_Images[i].getPath().size());
     }
+}
+
+void Compilator::_writeMPE(std::fstream* file)
+{
+    short EventHeader = 0x0005;
+    short buff;
+
+    // write MPE header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write id
+    buff = this->_MPEvent->getId();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+    // write size of name and name
+    buff = this->_MPEvent->getName().size();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    file->write(this->_MPEvent->getName().c_str(), this->_MPEvent->getName().size());
+
+    // write size of text and text
+    buff = this->_MPEvent->getText().size();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    file->write(this->_MPEvent->getText().c_str(), this->_MPEvent->getText().size());
+
+    // write size of faces vector Y
+    buff = this->_MPEvent->getFaces().size();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+    // write content of faces vector Y 
+    for (int i = 0; i < this->_MPEvent->getFaces().size(); i++) {
+        // write size of faces vector X
+        buff = this->_MPEvent->getFaces()[i].size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write content of faces vector X
+        for (int j = 0; j < this->_MPEvent->getFaces()[i].size(); j++) {
+            // write size of face and face 
+            buff = this->_MPEvent->getFaces()[i][j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            file->write(this->_MPEvent->getFaces()[i][j].c_str(), this->_MPEvent->getFaces()[i][j].size());
+        }
+    }
+
+    // write size of skins vector Y
+    buff = this->_MPEvent->getSkins().size();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+    // write content of skins vector Y 
+    for (int i = 0; i < this->_MPEvent->getSkins().size(); i++) {
+        // write size of skins vector X
+        buff = this->_MPEvent->getSkins()[i].size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write content of skins vector X
+        for (int j = 0; j < this->_MPEvent->getSkins()[i].size(); j++) {
+            // write size of skin and skin
+            buff = this->_MPEvent->getSkins()[i][j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            file->write(this->_MPEvent->getSkins()[i][j].c_str(), this->_MPEvent->getSkins()[i][j].size());
+        }
+    }
+
+    // write size of hairs vector Y
+    buff = this->_MPEvent->getHairs().size();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+    // write content of hairs vector Y 
+    for (int i = 0; i < this->_MPEvent->getHairs().size(); i++) {
+        // write size of hairs vector X
+        buff = this->_MPEvent->getHairs()[i].size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write content of hairs vector X
+        for (int j = 0; j < this->_MPEvent->getHairs()[i].size(); j++) {
+            // write size of skin and skin
+            buff = this->_MPEvent->getHairs()[i][j].size();
+            file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+            file->write(this->_MPEvent->getHairs()[i][j].c_str(), this->_MPEvent->getHairs()[i][j].size());
+        }
+    }
+
+    // write next message id
+    buff = this->_MPEvent->getNextMessageId();
+    file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
 }
