@@ -425,7 +425,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeCharacters(&compiledFile);
     this->_writeCCE(&compiledFile);
     this->_writeEvents(&compiledFile);
-    // _write images
+    this->_writeImages(&compiledFile);
     // _write mpe
     // _write messages
     // _write musics
@@ -489,7 +489,7 @@ void Compilator::_writeCharacters(std::fstream* file)
     short numberOfCharacters = this->_Characters.size();
     short buff;
 
-    // write character header
+    // write characters header
     file->write(reinterpret_cast<const char*>(&characterHeader), sizeof(short));
     
     // write number of characters
@@ -563,7 +563,7 @@ void Compilator::_writeEvents(std::fstream* file)
     short numberOfEvents = this->_Events.size();
     short buff;
 
-    // write event header
+    // write events header
     file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
 
     // write number of events
@@ -616,5 +616,33 @@ void Compilator::_writeEvents(std::fstream* file)
         buff = this->_Events[i].getCcei();
         file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
     }
+}
 
+void Compilator::_writeImages(std::fstream* file)
+{
+    short EventHeader = 0x0004;
+    short numberOfImages = this->_Images.size();
+    short buff;
+
+    // write images header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write number of events
+    file->write(reinterpret_cast<const char*>(&numberOfImages), sizeof(short));
+
+    for (int i = 0; i < this->_Images.size(); i++) {
+        // write id
+        buff = this->_Images[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // size of name and name
+        buff = this->_Images[i].getName().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Images[i].getName().c_str(), this->_Images[i].getName().size());
+
+        // size of path and path
+        buff = this->_Images[i].getPath().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Images[i].getPath().c_str(), this->_Images[i].getPath().size());
+    }
 }

@@ -10,6 +10,8 @@ public:
 		this->_path = path;
 	}
 	int getId();
+	std::string getName();
+	std::string getPath();
 
 private:
 	int _id;
