@@ -319,7 +319,7 @@ void Compilator::_loadSfx(std::fstream* file)
     name = this->_readText(line);
 
     std::getline(*file, line);
-    path = this->_readText(path);
+    path = this->_readText(line);
 
     this->_Sfxs.push_back(Sfx(id, name, path));
 }
@@ -428,8 +428,8 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeImages(&compiledFile);
     this->_writeMPE(&compiledFile);
     this->_writeMessages(&compiledFile);
-    // _write musics
-    // _write sfx
+    this->_writeMusics(&compiledFile);
+    this->_writeSfx(&compiledFile);
     // _write compilation info and end of file
     // overwrite size of file
     compiledFile.close();
@@ -789,5 +789,63 @@ void Compilator::_writeMessages(std::fstream* file)
         // write next event id
         buff = this->_Messages[i].getNextEvent();
         file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+    }
+}
+
+void Compilator::_writeMusics(std::fstream* file)
+{
+    short EventHeader = 0x0007;
+    short numberOfMusics = this->_Musics.size();
+    short buff;
+
+    // write musics header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write number of musics
+    file->write(reinterpret_cast<const char*>(&numberOfMusics), sizeof(short));
+
+    for (int i = 0; i < this->_Musics.size(); i++) {
+        // write id
+        buff = this->_Musics[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write size of name and name
+        buff = this->_Musics[i].getName().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Musics[i].getName().c_str(), this->_Musics[i].getName().size());
+
+        // write size of path and path
+        buff = this->_Musics[i].getPath().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Musics[i].getPath().c_str(), this->_Musics[i].getPath().size());
+    }
+}
+
+void Compilator::_writeSfx(std::fstream* file)
+{
+    short EventHeader = 0x0008;
+    short numberOfSfx = this->_Sfxs.size();
+    short buff;
+
+    // write musics header
+    file->write(reinterpret_cast<const char*>(&EventHeader), sizeof(short));
+
+    // write number of musics
+    file->write(reinterpret_cast<const char*>(&numberOfSfx), sizeof(short));
+
+    for (int i = 0; i < this->_Sfxs.size(); i++) {
+        // write id
+        buff = this->_Sfxs[i].getId();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+
+        // write size of name and name
+        buff = this->_Sfxs[i].getName().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Sfxs[i].getName().c_str(), this->_Sfxs[i].getName().size());
+
+        // write size of path and path
+        buff = this->_Sfxs[i].getPath().size();
+        file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
+        file->write(this->_Sfxs[i].getPath().c_str(), this->_Sfxs[i].getPath().size());
     }
 }

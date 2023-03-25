@@ -70,5 +70,7 @@ private:
 	void _writeImages(std::fstream* file);
 	void _writeMPE(std::fstream* file);
 	void _writeMessages(std::fstream* file);
+	void _writeMusics(std::fstream* file);
+	void _writeSfx(std::fstream* file);
 };
 
