@@ -430,7 +430,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeMessages(&compiledFile);
     this->_writeMusics(&compiledFile);
     this->_writeSfx(&compiledFile);
-    // _write compilation info and end of file
+    this->_writeCompilationInfo(&compiledFile);
     // overwrite size of file
     compiledFile.close();
     std::cout << "compilation complete" << std::endl;
@@ -848,4 +848,48 @@ void Compilator::_writeSfx(std::fstream* file)
         file->write(reinterpret_cast<const char*>(&buff), sizeof(short));
         file->write(this->_Sfxs[i].getPath().c_str(), this->_Sfxs[i].getPath().size());
     }
+}
+
+void Compilator::_writeCompilationInfo(std::fstream* file)
+{
+    // write day and time
+    std::string dayTimeInfo = "Day and time: ";
+    file->write(dayTimeInfo.c_str(), dayTimeInfo.size());
+
+    // get current day and time
+    time_t rawtime;
+    struct tm timeinfo;
+    char timeToWrite[80];
+
+    std::time(&rawtime);
+    localtime_s(&timeinfo, &rawtime);
+
+    std::strftime(timeToWrite, sizeof(timeToWrite), "%d-%m-%Y %I:%M:%S", &timeinfo);
+    
+    // write current day and time to file
+    file->write(timeToWrite, 19);
+
+    // write user info
+    std::string userInfo = "User info: ";
+    file->write(userInfo.c_str(), userInfo.size());
+
+    // get current user and write or default
+    std::string defaultUser = "DefaultUser???";
+    char* user_name = nullptr;
+    size_t len;
+    errno_t err = _dupenv_s(&user_name, &len, "USERNAME");
+    if (err == 0 && user_name != nullptr) {
+        file->write(user_name, len);
+    }
+    else {
+        file->write(defaultUser.c_str(), defaultUser.size());
+    }
+
+    // write compilator and engine info
+    std::string compilatorAndEngineInfo = "Compilator: 1.0v, Engine: 1.0v, Developer Test";
+    file->write(compilatorAndEngineInfo.c_str(), compilatorAndEngineInfo.size());
+
+    // write end of file
+    int end = 0x00ff00ff;
+    file->write(reinterpret_cast<const char*>(&end), sizeof(int));
 }

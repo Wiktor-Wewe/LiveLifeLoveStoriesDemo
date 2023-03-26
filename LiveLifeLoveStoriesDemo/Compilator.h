@@ -72,5 +72,6 @@ private:
 	void _writeMessages(std::fstream* file);
 	void _writeMusics(std::fstream* file);
 	void _writeSfx(std::fstream* file);
+	void _writeCompilationInfo(std::fstream* file);
 };
 
