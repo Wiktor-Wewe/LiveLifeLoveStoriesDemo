@@ -73,5 +73,6 @@ private:
 	void _writeMusics(std::fstream* file);
 	void _writeSfx(std::fstream* file);
 	void _writeCompilationInfo(std::fstream* file);
+	void _overwriteSizeOfFile(std::fstream* file);
 };
 

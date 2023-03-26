@@ -431,7 +431,7 @@ void Compilator::_writeMemoryToFile(std::string FileName)
     this->_writeMusics(&compiledFile);
     this->_writeSfx(&compiledFile);
     this->_writeCompilationInfo(&compiledFile);
-    // overwrite size of file
+    this->_overwriteSizeOfFile(&compiledFile);
     compiledFile.close();
     std::cout << "compilation complete" << std::endl;
     std::cout << "file: " << this->_makeNewName(FileName) << " was created" << std::endl;
@@ -892,4 +892,11 @@ void Compilator::_writeCompilationInfo(std::fstream* file)
     // write end of file
     int end = 0x00ff00ff;
     file->write(reinterpret_cast<const char*>(&end), sizeof(int));
+}
+
+void Compilator::_overwriteSizeOfFile(std::fstream* file)
+{
+    int sizeOfFile = file->tellp();
+    file->seekp(0x14);
+    file->write(reinterpret_cast<const char*>(&sizeOfFile), sizeof(int));
 }
