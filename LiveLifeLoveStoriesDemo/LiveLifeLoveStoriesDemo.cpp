@@ -71,19 +71,19 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if (argv[1] == "-f") {
+    if (strcmp(argv[1], "-f") == 0) {
         compile(argv[2]);
     }
 
-    if (argv[1] == "-p") {
+    else if (strcmp(argv[1], "-p") == 0) {
         play(argv[2]);
     }
 
-    if (isNameWes(argv[1])) {
+    else if (isNameWes(argv[1])) {
         compile(argv[1]);
     }
 
-    if (isNameWesc(argv[1])) {
+    else if (isNameWesc(argv[1])) {
         play(argv[1]);
     }
 
