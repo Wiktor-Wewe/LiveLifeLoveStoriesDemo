@@ -414,12 +414,12 @@ void Compilator::_writeMemoryToFile(std::string FileName)
 {
     std::fstream compiledFile(this->_makeNewName(FileName), std::ios::out | std::ios::binary);
     short sNULL = 0x0000;
-    double sizeOfFile = 0x00000000;
+    int sizeOfFile = 0x0000;
 
     // write header
     compiledFile.write(reinterpret_cast<const char*>("wewescriptcompiled"), 0x12); // type
     compiledFile.write(reinterpret_cast<const char*>(&sNULL), sizeof(short)); // just NULL
-    compiledFile.write(reinterpret_cast<const char*>(&sizeOfFile), sizeof(double)); // for size of file
+    compiledFile.write(reinterpret_cast<const char*>(&sizeOfFile), sizeof(int)); // for size of file
     
     this->_writeFileInfo(&compiledFile);
     this->_writeCharacters(&compiledFile);

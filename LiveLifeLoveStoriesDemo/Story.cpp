@@ -24,21 +24,32 @@ int Story::loadStory(std::fstream* file)
 {
     short buff;
 
-    while (!file->eof()) {
-        // is header okay?
-        // is size of file okay?
-        // load story global info
-        // load characters
-        // load cce
-        // load events
-        // load images
-        // load mpe
-        // load messages
-        // load music
-        // load sfx
-        // load compilation info
-        // check if end of file
+    if (!this->_isHeaderOkay(file)) {
+        std::cout << "header error" << std::endl;
+        return 1;
     }
+
+    if (!this->_isSizeOkay(file)) {
+        std::cout << "size error" << std::endl;
+        return 2;
+    }
+        
+    this->_loadGlobalInfo(file);
+    std::cout << "name: " << this->_name << std::endl;
+    std::cout << "info: " << this->_info << std::endl;
+    std::cout << "author: " << this->_author << std::endl;
+    std::cout << "date: " << this->_date << std::endl;
+
+    this->_loadCharacters(file);
+    // load cce
+    // load events
+    // load images
+    // load mpe
+    // load messages
+    // load music
+    // load sfx
+    // load compilation info
+    // check if end of file
     
     return 0;
 }
@@ -350,4 +361,82 @@ void Story::_setAuthor(std::string author)
 void Story::_setDate(std::string date)
 {
     this->_date = date;
+}
+
+bool Story::_isHeaderOkay(std::fstream* file)
+{
+    char header[0x13];
+    file->read(header, 0x13);
+
+    if (strcmp(header, "wewescriptcompiled") == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Story::_isSizeOkay(std::fstream* file)
+{
+    int sizeFromFile;
+    file->read(reinterpret_cast<char*>(&sizeFromFile), sizeof(int));
+    this->_swapBytes(sizeFromFile);
+    
+    file->seekg(0, std::ios::end);
+    int realSize = file->tellg();
+
+    file->seekg(0x18, std::ios::beg);
+
+    if (realSize == sizeFromFile) {
+        return true;
+    }
+
+    return false;
+}
+
+void Story::_loadGlobalInfo(std::fstream* file)
+{
+    int buff;
+    char buffString[0xff];
+    this->_wipeStrBuff(buffString, 0xff);
+
+    // read story name
+    file->read(reinterpret_cast<char*>(&buff), sizeof(int));
+    file->read(buffString, buff);
+    this->_name = buffString;
+    this->_wipeStrBuff(buffString, 0xff);
+
+    // read story info
+    file->read(reinterpret_cast<char*>(&buff), sizeof(int));
+    file->read(buffString, buff);
+    this->_info = buffString;
+    this->_wipeStrBuff(buffString, 0xff);
+    
+    // read author
+    file->read(reinterpret_cast<char*>(&buff), sizeof(int));
+    file->read(buffString, buff);
+    this->_author = buffString;
+    this->_wipeStrBuff(buffString, 0xff);
+
+    // read date
+    file->read(reinterpret_cast<char*>(&buff), sizeof(int));
+    file->read(buffString, buff);
+    this->_date = buffString;
+    this->_wipeStrBuff(buffString, 0xff);
+}
+
+void Story::_loadCharacters(std::fstream* file)
+{
+
+}
+
+void Story::_swapBytes(int &x)
+{
+    x = x >> 8;
+}
+
+void Story::_wipeStrBuff(char* buff, int size)
+{
+    for (int i = 0; i < size; i++) {
+        buff[i] = NULL;
+    }
 }

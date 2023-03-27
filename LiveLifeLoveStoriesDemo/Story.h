@@ -71,5 +71,12 @@ private:
 	void _setDate(std::string date);
 
 	// load
+	bool _isHeaderOkay(std::fstream* file);
+	bool _isSizeOkay(std::fstream* file);
+	void _loadGlobalInfo(std::fstream* file);
+	void _loadCharacters(std::fstream* file);
+
+	void _swapBytes(int &x);
+	void _wipeStrBuff(char* buff, int size);
 };
 
