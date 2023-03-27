@@ -22,37 +22,22 @@ std::string Story::getDate()
 
 int Story::loadStory(std::fstream* file)
 {
-    std::string buff;
-    int header = 0;
-    while (!file->eof()) {
-        while (!header) {
-            std::getline(*file, buff);
-            header = this->_isHeader(buff);
-        }
-        switch (header) {
-        case 1: // character
-            this->_loadCharacter(file);
-            break;
-        case 2: // cce
+    short buff;
 
-            break;
-        case 3: // event
-            break;
-        case 4: // image
-            break;
-        case 5: // mpe
-            break;
-        case 6: // message
-            break;
-        case 7: // music
-            break;
-        case 8: // sfx
-            break;
-        default:
-            std::cout << "cant handle header: " << buff << std::endl;
-            break;
-        }
-        header = 0;
+    while (!file->eof()) {
+        // is header okay?
+        // is size of file okay?
+        // load story global info
+        // load characters
+        // load cce
+        // load events
+        // load images
+        // load mpe
+        // load messages
+        // load music
+        // load sfx
+        // load compilation info
+        // check if end of file
     }
     
     return 0;
@@ -347,39 +332,6 @@ Protagonist* Story::_getPlayer()
     return this->_Player;
 }
 
-std::string Story::cutStringWhile(std::string text, int begin, char end)
-{
-    std::string newText;
-    int i = begin;
-    while (text[i] != end) {
-        newText += text[i];
-        i++;
-    }
-    return newText;
-}
-
-std::vector<std::string> Story::str2vecstr(std::string text)
-{
-    std::vector<std::string> list;
-    std::string buff;
-    int quote = 0;
-
-    for (int i = 0; i < text.size(); i++) {
-        if (text[i] == '"') {
-            quote++;
-        }
-        if (quote % 2 != 0 && text[i] != '"') {
-            buff += text[i];
-        }
-        if (quote % 2 == 0 && text[i] == '"') {
-            list.push_back(buff);
-            buff.clear();
-        }
-    }
-
-    return list;
-}
-
 void Story::_setName(std::string name)
 {
     this->_name = name;
@@ -399,82 +351,3 @@ void Story::_setDate(std::string date)
 {
     this->_date = date;
 }
-
-int Story::_isHeader(std::string text)
-{
-    if (text.find("<character>") != std::string::npos) return 1;
-    if (text.find("<cce>") != std::string::npos) return 2;
-    if (text.find("<event>") != std::string::npos) return 3;
-    if (text.find("<image>") != std::string::npos) return 4;
-    if (text.find("<mpe>") != std::string::npos) return 5;
-    if (text.find("<message>") != std::string::npos) return 6;
-    if (text.find("<music>") != std::string::npos) return 7;
-    if (text.find("<sfx>") != std::string::npos) return 8;
-
-    return 0;
-}
-
-void Story::_loadCharacter(std::fstream* file)
-{
-    int id = 0;
-    std::string name;
-    std::vector<std::string> paths;
-
-    std::string buff;
-    int position = 0;
-
-    //getting id
-    std::getline(*file, buff);
-    position = buff.find("id: ");
-
-    if (position != std::string::npos) {
-        buff = this->cutStringWhile(buff, 4, ';');
-        id = std::stoi(buff);
-        
-        std::cout << "find characters id: " << id << std::endl;
-    }
-    else {
-        std::cout << "error while loading characters id at position: " << file->tellg() << std::endl;
-        return;
-    }
-
-    //getting name
-    std::getline(*file, buff);
-    position = buff.find("name: ");
-
-    if (position != std::string::npos) {
-        name = this->cutStringWhile(buff, 7, '"');
-
-        std::cout << "find characters name: " << name << std::endl;
-    }
-    else {
-        std::cout << "error while loading characters name at position: " << file->tellg() << std::endl;
-        return;
-    }
-
-    //getting paths
-    std::getline(*file, buff);
-    position = buff.find("sprites: ");
-
-    if (position != std::string::npos) {
-        buff = this->cutStringWhile(buff, 9, ';');
-        paths = this->str2vecstr(buff);
-
-        for (int i = 0; i < paths.size(); i++) {
-            std::cout << "find characters paths [" << i << "] : " << paths[i] << std::endl;
-        }
-    }
-    else {
-        std::cout << "error while loading characters name at position: " << file->tellg() << std::endl;
-        return;
-    }
-
-    this->_Characters.push_back(Character(id, name, paths));
-}
-
-void Story::_loadCCE(std::fstream* file)
-{
-
-}
-
-

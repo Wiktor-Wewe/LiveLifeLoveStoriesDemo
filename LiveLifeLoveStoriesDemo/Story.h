@@ -58,22 +58,18 @@ private:
 	std::string _author;
 	std::string _date;
 
+	// play
 	Event* _findEventById(int id);
 	Message* _findMessageById(int id);
 	MakeProtagonistEvent* _getMpei();
 	ChooseClothesEvent* _findCceById(int id);
 	Protagonist* _getPlayer();
 
-	std::string cutStringWhile(std::string text, int begin, char end);
-	std::vector<std::string> str2vecstr(std::string text);
-
 	void _setName(std::string name);
 	void _setInfo(std::string info);
 	void _setAuthor(std::string author);
 	void _setDate(std::string date);
 
-	int _isHeader(std::string text);
-	void _loadCharacter(std::fstream* file);
-	void _loadCCE(std::fstream* file);
+	// load
 };
 

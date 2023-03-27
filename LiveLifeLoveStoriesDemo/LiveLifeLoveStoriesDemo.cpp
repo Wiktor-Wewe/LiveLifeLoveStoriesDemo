@@ -31,8 +31,7 @@ bool isNameWesc(std::string name) {
 }
 
 void play(std::string fileName) {
-    std::fstream file;
-    file.open(fileName, std::ios::in);
+    std::fstream file(fileName, std::ios::in | std::ios::binary);
     if (!file.good()) {
         std::cout << "error file" << std::endl;
         return;
