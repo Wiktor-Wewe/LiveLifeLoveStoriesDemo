@@ -41,8 +41,8 @@ int Story::loadStory(std::fstream* file)
     std::cout << "date: " << this->_date << std::endl;
 
     this->_loadCharacters(file);
-    // load cce
-    // load events
+    this->_loadCCE(file);
+    this->_loadEvents(file);
     // load images
     // load mpe
     // load messages
@@ -396,6 +396,7 @@ bool Story::_isSizeOkay(std::fstream* file)
 void Story::_loadGlobalInfo(std::fstream* file)
 {
     int buff;
+    unsigned short ffff = 0x0000;
     char buffString[0xff];
     this->_wipeStrBuff(buffString, 0xff);
 
@@ -403,30 +404,187 @@ void Story::_loadGlobalInfo(std::fstream* file)
     file->read(reinterpret_cast<char*>(&buff), sizeof(int));
     file->read(buffString, buff);
     this->_name = buffString;
-    this->_wipeStrBuff(buffString, 0xff);
+    this->_wipeStrBuff(buffString);
 
     // read story info
     file->read(reinterpret_cast<char*>(&buff), sizeof(int));
     file->read(buffString, buff);
     this->_info = buffString;
-    this->_wipeStrBuff(buffString, 0xff);
+    this->_wipeStrBuff(buffString);
     
     // read author
     file->read(reinterpret_cast<char*>(&buff), sizeof(int));
     file->read(buffString, buff);
     this->_author = buffString;
-    this->_wipeStrBuff(buffString, 0xff);
+    this->_wipeStrBuff(buffString);
 
     // read date
     file->read(reinterpret_cast<char*>(&buff), sizeof(int));
     file->read(buffString, buff);
     this->_date = buffString;
-    this->_wipeStrBuff(buffString, 0xff);
+    this->_wipeStrBuff(buffString);
+
+    // check if end of global info
+    file->read(reinterpret_cast<char*>(&ffff), sizeof(short));
+    if (ffff != 0xffff) {
+        std::cout << "0xffff is missing" << std::endl;
+    }
 }
 
 void Story::_loadCharacters(std::fstream* file)
 {
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0001) {
+        std::cout << "character header error" << std::endl;
+    }
 
+    unsigned short numberOfCharacters = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfName = 0x0000;
+    char name[0xff];
+    this->_wipeStrBuff(name, 0xff);
+    std::string strName;
+    std::vector<std::string> paths;
+    unsigned short numberOfSpritesPaths = 0x0000;
+    unsigned short sizeOfPath = 0x0000;
+    char path[0xff];
+    this->_wipeStrBuff(path, 0xff);
+    std::string strPath;
+
+    file->read(reinterpret_cast<char*>(&numberOfCharacters), sizeof(short));
+    
+    for (short i = 0; i < numberOfCharacters; i++) {
+        paths.clear();
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfName), sizeof(short));
+        file->read(name, sizeOfName);
+        strName = name;
+        this->_wipeStrBuff(name);
+        file->read(reinterpret_cast<char*>(&numberOfSpritesPaths), sizeof(short));
+        for (short j = 0; j < numberOfSpritesPaths; j++) {
+            file->read(reinterpret_cast<char*>(&sizeOfPath), sizeof(short));
+            file->read(path, sizeOfPath);
+            strPath = path;
+            this->_wipeStrBuff(path);
+            paths.push_back(strPath);
+        }
+        this->_Characters.push_back(Character(buffId, strName, paths));
+    }
+}
+
+void Story::_loadCCE(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0002) {
+        std::cout << "CCE header error" << std::endl;
+    }
+
+    unsigned short numberOfCCE = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfText = 0x0000;
+    char text[0xff];
+    this->_wipeStrBuff(text, 0xff);
+    std::string strText;
+    std::vector<std::vector<std::string>> clothesY;
+    std::vector<std::string> clothesX;
+    unsigned short sizeOfClothesY = 0x0000;
+    unsigned short sizeOfClothesX = 0x0000;
+    unsigned short sizeOfPath = 0x0000;
+    char path[0xff];
+    this->_wipeStrBuff(path, 0xff);
+    std::string strPath;
+    unsigned short nextMessageId = 0x0000;
+
+    file->read(reinterpret_cast<char*>(&numberOfCCE), sizeof(short));
+    for (short i = 0; i < numberOfCCE; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfText), sizeof(short));
+        file->read(text, sizeOfText);
+        strText = text;
+        this->_wipeStrBuff(text);
+        file->read(reinterpret_cast<char*>(&sizeOfClothesY), sizeof(short));
+        for (short j = 0; j < sizeOfClothesY; j++) {
+            file->read(reinterpret_cast<char*>(&sizeOfClothesX), sizeof(short));
+            for (short k = 0; k < sizeOfClothesX; k++) {
+                file->read(reinterpret_cast<char*>(&sizeOfPath), sizeof(short));
+                file->read(path, sizeOfPath);
+                strPath = path;
+                this->_wipeStrBuff(path);
+                clothesX.push_back(strPath);
+            }
+            clothesY.push_back(clothesX);
+            clothesX.clear();
+        }
+        file->read(reinterpret_cast<char*>(&nextMessageId), sizeof(short));
+        this->_CCEvents.push_back(ChooseClothesEvent(buffId, strText, clothesY, nextMessageId));
+        clothesY.clear();
+    }
+}
+
+void Story::_loadEvents(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0003) {
+        std::cout << "Event header error" << std::endl;
+    }
+
+    unsigned short numberOfEvents = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short numberOfPlayerOptions = 0x0000;
+    unsigned short sizeOfPlayerOption = 0x0000;
+    char playerOption[0xff];
+    this->_wipeStrBuff(playerOption, 0xff);
+    std::string strPlayerOption;
+    std::vector<std::string> playerOptions;
+    unsigned short numberOfNextMessages = 0x0000;
+    unsigned short nextMessage = 0x0000;
+    std::vector<int> nextMessages;
+    unsigned short numberOfNextEvents = 0x0000;
+    unsigned short nextEvent = 0x0000;
+    std::vector<int> nextEvents;
+    unsigned short mpei = 0x0000;
+    unsigned short ccei = 0x0000;
+
+    file->read(reinterpret_cast<char*>(&numberOfEvents), sizeof(short));
+    for (short i = 0; i < numberOfEvents; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&numberOfPlayerOptions), sizeof(short));
+        for (short j = 0; j < numberOfPlayerOptions; j++) {
+            file->read(reinterpret_cast<char*>(&sizeOfPlayerOption), sizeof(short));
+            file->read(playerOption, sizeOfPlayerOption);
+            strPlayerOption = playerOption;
+            this->_wipeStrBuff(playerOption);
+            playerOptions.push_back(strPlayerOption);
+        }
+        file->read(reinterpret_cast<char*>(&numberOfNextMessages), sizeof(short));
+        for (short j = 0; j < numberOfNextMessages; j++) {
+            file->read(reinterpret_cast<char*>(&nextMessage), sizeof(short));
+            nextMessages.push_back(nextMessage);
+        }
+        file->read(reinterpret_cast<char*>(&numberOfNextEvents), sizeof(short));
+        for (short j = 0; j < numberOfNextEvents; j++) {
+            file->read(reinterpret_cast<char*>(&nextEvent), sizeof(short));
+            nextEvents.push_back(nextEvent);
+        }
+        file->read(reinterpret_cast<char*>(&mpei), sizeof(short));
+        file->read(reinterpret_cast<char*>(&ccei), sizeof(short));
+
+        this->_Events.push_back(Event(buffId, playerOptions, nextMessages, nextEvents, mpei, ccei));
+
+        playerOptions.clear();
+        nextMessages.clear();
+        nextEvents.clear();
+    }
+}
+
+void Story::_loadImages(std::fstream* file)
+{
 }
 
 void Story::_swapBytes(int &x)
@@ -434,9 +592,16 @@ void Story::_swapBytes(int &x)
     x = x >> 8;
 }
 
+void Story::_wipeStrBuff(char* buff)
+{
+    int i = 0;
+    while (buff[i] != NULL) {
+        buff[i] = NULL;
+        i++;
+    }
+}
+
 void Story::_wipeStrBuff(char* buff, int size)
 {
-    for (int i = 0; i < size; i++) {
-        buff[i] = NULL;
-    }
+    memset(buff, 0, size);
 }

@@ -75,8 +75,12 @@ private:
 	bool _isSizeOkay(std::fstream* file);
 	void _loadGlobalInfo(std::fstream* file);
 	void _loadCharacters(std::fstream* file);
+	void _loadCCE(std::fstream* file);
+	void _loadEvents(std::fstream* file);
+	void _loadImages(std::fstream* file);
 
-	void _swapBytes(int &x);
+	void _swapBytes(int &x); //xD
+	void _wipeStrBuff(char* buff);
 	void _wipeStrBuff(char* buff, int size);
 };
 
