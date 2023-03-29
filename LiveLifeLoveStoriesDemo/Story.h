@@ -79,7 +79,7 @@ private:
 	void _loadEvents(std::fstream* file);
 	void _loadImages(std::fstream* file);
 
-	void _swapBytes(int &x); //xD
+	void _swapBytes(int& x);
 	void _wipeStrBuff(char* buff);
 	void _wipeStrBuff(char* buff, int size);
 };

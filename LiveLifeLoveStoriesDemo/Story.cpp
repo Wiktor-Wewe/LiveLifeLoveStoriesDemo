@@ -43,7 +43,7 @@ int Story::loadStory(std::fstream* file)
     this->_loadCharacters(file);
     this->_loadCCE(file);
     this->_loadEvents(file);
-    // load images
+    this->_loadImages(file);
     // load mpe
     // load messages
     // load music
@@ -585,11 +585,43 @@ void Story::_loadEvents(std::fstream* file)
 
 void Story::_loadImages(std::fstream* file)
 {
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0004) {
+        std::cout << "Image header error" << std::endl;
+    }
+
+    unsigned short numberOfImages = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfName = 0x0000;
+    char name[0xff];
+    this->_wipeStrBuff(name, 0xff);
+    std::string strName;
+    unsigned short sizeOfPath = 0x0000;
+    char path[0xff];
+    this->_wipeStrBuff(path, 0xff);
+    std::string strPath;
+
+    file->read(reinterpret_cast<char*>(&numberOfImages), sizeof(short));
+    for (short i = 0; i < numberOfImages; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfName), sizeof(short));
+        file->read(name, sizeOfName);
+        strName = name;
+        this->_wipeStrBuff(name);
+        file->read(reinterpret_cast<char*>(&sizeOfPath), sizeof(short));
+        file->read(path, sizeOfPath);
+        strPath = path;
+        this->_wipeStrBuff(path);
+        this->_Images.push_back(Image(buffId, strName, strPath));
+    }
 }
 
-void Story::_swapBytes(int &x)
+void Story::_swapBytes(int& x)
 {
-    x = x >> 8;
+    x = ((x & 0x00FF) << 16) | ((x & 0xFF0000) >> 16) | (x & 0x0000FF00);
+    x = ((x & 0xFF00FF00) >> 8) | ((x & 0x00FF00FF) << 8);
 }
 
 void Story::_wipeStrBuff(char* buff)
@@ -599,6 +631,7 @@ void Story::_wipeStrBuff(char* buff)
         buff[i] = NULL;
         i++;
     }
+
 }
 
 void Story::_wipeStrBuff(char* buff, int size)
