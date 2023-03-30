@@ -851,6 +851,8 @@ void Compilator::_writeSfx(std::fstream* file)
 
 void Compilator::_writeCompilationInfo(std::fstream* file)
 {
+    char br = '\n';
+
     // write day and time
     std::string dayTimeInfo = "Day and time: ";
     file->write(dayTimeInfo.c_str(), dayTimeInfo.size());
@@ -864,9 +866,10 @@ void Compilator::_writeCompilationInfo(std::fstream* file)
     localtime_s(&timeinfo, &rawtime);
 
     std::strftime(timeToWrite, sizeof(timeToWrite), "%d-%m-%Y %I:%M:%S", &timeinfo);
-    
+
     // write current day and time to file
     file->write(timeToWrite, 19);
+    file->write(reinterpret_cast<char*>(&br), sizeof(br));
 
     // write user info
     std::string userInfo = "User info: ";
@@ -879,14 +882,17 @@ void Compilator::_writeCompilationInfo(std::fstream* file)
     errno_t err = _dupenv_s(&user_name, &len, "USERNAME");
     if (err == 0 && user_name != nullptr) {
         file->write(user_name, len);
+        file->write(reinterpret_cast<char*>(&br), sizeof(br));
     }
     else {
         file->write(defaultUser.c_str(), defaultUser.size());
+        file->write(reinterpret_cast<char*>(&br), sizeof(br));
     }
 
     // write compilator and engine info
     std::string compilatorAndEngineInfo = "Compilator: 1.0v, Engine: 1.0v, Developer Test";
     file->write(compilatorAndEngineInfo.c_str(), compilatorAndEngineInfo.size());
+    file->write(reinterpret_cast<char*>(&br), sizeof(br));
 
     // write end of file
     int end = 0x00ff00ff;
