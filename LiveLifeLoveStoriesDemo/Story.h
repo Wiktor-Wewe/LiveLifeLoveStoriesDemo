@@ -80,6 +80,8 @@ private:
 	void _loadImages(std::fstream* file);
 	void _loadMPE(std::fstream* file);
 	void _loadMessages(std::fstream* file);
+	void _loadMusics(std::fstream* file);
+	void _loadSfxs(std::fstream* file);
 
 	void _swapBytes(int& x);
 	void _wipeStrBuff(char* buff);

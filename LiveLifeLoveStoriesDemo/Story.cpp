@@ -47,8 +47,8 @@ int Story::loadStory(std::fstream* file)
     this->_loadImages(file);
     this->_loadMPE(file);
     this->_loadMessages(file);
-    // load music
-    // load sfx
+    this->_loadMusics(file);
+    this->_loadSfxs(file);
     // load compilation info
     // check if end of file
     
@@ -776,6 +776,78 @@ void Story::_loadMessages(std::fstream* file)
 
         musics.clear();
         sfxs.clear();
+    }
+}
+
+void Story::_loadMusics(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0007) {
+        std::cout << "Music header error" << std::endl;
+    }
+
+    unsigned short numberOfMusics = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfName = 0x0000;
+    char name[0xff];
+    this->_wipeStrBuff(name, 0xff);
+    std::string strName;
+    unsigned short sizeOfPath = 0x0000;
+    char path[0xff];
+    this->_wipeStrBuff(path, 0xff);
+    std::string strPath;
+
+    file->read(reinterpret_cast<char*>(&numberOfMusics), sizeof(short));
+    for (short i = 0; i < numberOfMusics; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfName), sizeof(short));
+        file->read(name, sizeOfName);
+        strName = name;
+        this->_wipeStrBuff(name);
+        file->read(reinterpret_cast<char*>(&sizeOfPath), sizeof(short));
+        file->read(path, sizeOfPath);
+        strPath = path;
+        this->_wipeStrBuff(path);
+
+        this->_Musics.push_back(Music(buffId, strName, strPath));
+    }
+}
+
+void Story::_loadSfxs(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0008) {
+        std::cout << "Sfx header error" << std::endl;
+    }
+
+    unsigned short numberOfSfxs = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfName = 0x0000;
+    char name[0xff];
+    this->_wipeStrBuff(name, 0xff);
+    std::string strName;
+    unsigned short sizeOfPath = 0x0000;
+    char path[0xff];
+    this->_wipeStrBuff(path, 0xff);
+    std::string strPath;
+
+    file->read(reinterpret_cast<char*>(&numberOfSfxs), sizeof(short));
+    for (short i = 0; i < numberOfSfxs; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfName), sizeof(short));
+        file->read(name, sizeOfName);
+        strName = name;
+        this->_wipeStrBuff(name);
+        file->read(reinterpret_cast<char*>(&sizeOfPath), sizeof(short));
+        file->read(path, sizeOfPath);
+        strPath = path;
+        this->_wipeStrBuff(path);
+
+        this->_Sfxs.push_back(Sfx(buffId, strName, strPath));
     }
 }
 
