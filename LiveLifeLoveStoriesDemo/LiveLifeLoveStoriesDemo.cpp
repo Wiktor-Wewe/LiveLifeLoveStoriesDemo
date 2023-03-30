@@ -40,6 +40,7 @@ void play(std::string fileName) {
     Story s1 = Story();
     if (s1.loadStory(&file) == 0) {
         std::cout << "loadind complete" << std::endl;
+        file.close();
         s1.play();
     }
     else {
@@ -57,6 +58,7 @@ void compile(std::string fileName) {
 
     Compilator c;
     c.compile(&file, fileName);
+    file.close();
 }
 
 int main(int argc, char* argv[])

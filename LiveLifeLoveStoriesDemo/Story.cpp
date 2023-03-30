@@ -49,8 +49,11 @@ int Story::loadStory(std::fstream* file)
     this->_loadMessages(file);
     this->_loadMusics(file);
     this->_loadSfxs(file);
-    // load compilation info
-    // check if end of file
+    this->_loadCompilationInfo(file);
+    if (!this->_checkEndOfFile(file)) {
+        std::cout << "end of file error" << std::endl;
+        return 1;
+    }
     
     return 0;
 }
@@ -849,6 +852,47 @@ void Story::_loadSfxs(std::fstream* file)
 
         this->_Sfxs.push_back(Sfx(buffId, strName, strPath));
     }
+}
+
+void Story::_loadCompilationInfo(std::fstream* file)
+{
+    unsigned char buff = 0x00;
+    std::string compilationInfo;
+
+    while (buff != 0xff) {
+        file->read(reinterpret_cast<char*>(&buff), sizeof(char));
+        if (buff != 0xff) {
+            compilationInfo += buff;
+        }
+    }
+
+    file->read(reinterpret_cast<char*>(&buff), sizeof(char));
+    if (buff != 0x00) {
+        std::cout << "end of info error" << std::endl;
+    }
+
+    std::cout << "compilation info: " << std::endl;
+    std::cout << compilationInfo << "\n\n";
+}
+
+bool Story::_checkEndOfFile(std::fstream* file)
+{
+    unsigned char buff = 0x00;
+    file->read(reinterpret_cast<char*>(&buff), sizeof(char));
+    if (buff != 0xff) {
+        std::cout << "0xff is missing at the end of file" << std::endl;
+        return false;
+    }
+    file->read(reinterpret_cast<char*>(&buff), sizeof(char));
+    if (buff != 0x00) {
+        std::cout << "0x00 is missing at the end of file" << std::endl;
+        return false;
+    }
+    file->read(reinterpret_cast<char*>(&buff), sizeof(char));
+    if (file->eof()) {
+        return true;
+    }
+    return false;
 }
 
 void Story::_swapBytes(int& x)

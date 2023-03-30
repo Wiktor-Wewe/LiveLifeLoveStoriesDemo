@@ -57,6 +57,7 @@ private:
 	std::string _info;
 	std::string _author;
 	std::string _date;
+	std::string _compilationInfo;
 
 	// play
 	Event* _findEventById(int id);
@@ -82,6 +83,9 @@ private:
 	void _loadMessages(std::fstream* file);
 	void _loadMusics(std::fstream* file);
 	void _loadSfxs(std::fstream* file);
+	void _loadCompilationInfo(std::fstream* file);
+	bool _checkEndOfFile(std::fstream* file);
+
 
 	void _swapBytes(int& x);
 	void _wipeStrBuff(char* buff);
