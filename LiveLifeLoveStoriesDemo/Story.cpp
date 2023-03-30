@@ -39,12 +39,13 @@ int Story::loadStory(std::fstream* file)
     std::cout << "info: " << this->_info << std::endl;
     std::cout << "author: " << this->_author << std::endl;
     std::cout << "date: " << this->_date << std::endl;
+    std::cout << std::endl;
 
     this->_loadCharacters(file);
     this->_loadCCE(file);
     this->_loadEvents(file);
     this->_loadImages(file);
-    // load mpe
+    this->_loadMPE(file);
     // load messages
     // load music
     // load sfx
@@ -616,6 +617,109 @@ void Story::_loadImages(std::fstream* file)
         this->_wipeStrBuff(path);
         this->_Images.push_back(Image(buffId, strName, strPath));
     }
+}
+
+void Story::_loadMPE(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0005) {
+        std::cout << "MPE header error" << std::endl;
+    }
+
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfName = 0x0000;
+    char name[0xff];
+    this->_wipeStrBuff(name, 0xff);
+    std::string strName;
+    unsigned short sizeOfText = 0x0000;
+    char text[0xff];
+    this->_wipeStrBuff(text, 0xff);
+    std::string strText;
+
+    unsigned short sizeOfFacesY = 0x0000;
+    unsigned short sizeOfFacesX = 0x0000;
+    unsigned short sizeOfFace = 0x0000;
+    char face[0xff];
+    this->_wipeStrBuff(face, 0xff);
+    std::string strFace;
+    std::vector<std::vector<std::string>> facesY;
+    std::vector<std::string> facesX;
+    
+    unsigned short sizeOfSkinsY = 0x0000;
+    unsigned short sizeOfSkinsX = 0x0000;
+    unsigned short sizeOfSkin = 0x0000;
+    char skin[0xff];
+    this->_wipeStrBuff(skin, 0xff);
+    std::string strSkin;
+    std::vector<std::vector<std::string>> skinsY;
+    std::vector<std::string> skinsX;
+
+    unsigned short sizeOfHairsY = 0x0000;
+    unsigned short sizeOfHairsX = 0x0000;
+    unsigned short sizeOfHair = 0x0000;
+    char hair[0xff];
+    this->_wipeStrBuff(hair, 0xff);
+    std::string strHair;
+    std::vector<std::vector<std::string>> hairsY;
+    std::vector<std::string> hairsX;
+
+    unsigned short nextMessageId = 0x0000;
+
+    file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+    file->read(reinterpret_cast<char*>(&sizeOfName), sizeof(short));
+    file->read(name, sizeOfName);
+    strName = name;
+    file->read(reinterpret_cast<char*>(&sizeOfText), sizeof(short));
+    file->read(text, sizeOfText);
+    strText = text;
+
+    file->read(reinterpret_cast<char*>(&sizeOfFacesY), sizeof(short));
+    for (short y = 0; y < sizeOfFacesY; y++) {
+        file->read(reinterpret_cast<char*>(&sizeOfFacesX), sizeof(short));
+        for (short x = 0; x < sizeOfFacesX; x++) {
+            file->read(reinterpret_cast<char*>(&sizeOfFace), sizeof(short));
+            file->read(face, sizeOfFace);
+            strFace = face;
+            this->_wipeStrBuff(face);
+            facesX.push_back(strFace);
+        }
+        facesY.push_back(facesX);
+        facesX.clear();
+    }
+
+    file->read(reinterpret_cast<char*>(&sizeOfSkinsY), sizeof(short));
+    for (short y = 0; y < sizeOfSkinsY; y++) {
+        file->read(reinterpret_cast<char*>(&sizeOfSkinsX), sizeof(short));
+        for (short x = 0; x < sizeOfSkinsX; x++) {
+            file->read(reinterpret_cast<char*>(&sizeOfSkin), sizeof(short));
+            file->read(skin, sizeOfSkin);
+            strSkin = skin;
+            this->_wipeStrBuff(skin);
+            skinsX.push_back(strSkin);
+        }
+        skinsY.push_back(skinsX);
+        skinsX.clear();
+    }
+
+    file->read(reinterpret_cast<char*>(&sizeOfHairsY), sizeof(short));
+    for (short y = 0; y < sizeOfHairsY; y++) {
+        file->read(reinterpret_cast<char*>(&sizeOfHairsX), sizeof(short));
+        for (short x = 0; x < sizeOfHairsX; x++) {
+            file->read(reinterpret_cast<char*>(&sizeOfHair), sizeof(short));
+            file->read(hair, sizeOfHair);
+            strHair = hair;
+            this->_wipeStrBuff(hair);
+            hairsX.push_back(strHair);
+        }
+        hairsY.push_back(hairsX);
+        hairsX.clear();
+    }
+
+    file->read(reinterpret_cast<char*>(&nextMessageId), sizeof(short));
+    
+    this->_MPEvent = new MakeProtagonistEvent(buffId, strName, strText, facesY, skinsY, hairsY, nextMessageId);
 }
 
 void Story::_swapBytes(int& x)

@@ -78,6 +78,7 @@ private:
 	void _loadCCE(std::fstream* file);
 	void _loadEvents(std::fstream* file);
 	void _loadImages(std::fstream* file);
+	void _loadMPE(std::fstream* file);
 
 	void _swapBytes(int& x);
 	void _wipeStrBuff(char* buff);
