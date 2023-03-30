@@ -46,7 +46,7 @@ int Story::loadStory(std::fstream* file)
     this->_loadEvents(file);
     this->_loadImages(file);
     this->_loadMPE(file);
-    // load messages
+    this->_loadMessages(file);
     // load music
     // load sfx
     // load compilation info
@@ -720,6 +720,63 @@ void Story::_loadMPE(std::fstream* file)
     file->read(reinterpret_cast<char*>(&nextMessageId), sizeof(short));
     
     this->_MPEvent = new MakeProtagonistEvent(buffId, strName, strText, facesY, skinsY, hairsY, nextMessageId);
+}
+
+void Story::_loadMessages(std::fstream* file)
+{
+    // check if header is okay
+    unsigned short header = 0x0000;
+    file->read(reinterpret_cast<char*>(&header), sizeof(short));
+    if (header != 0x0006) {
+        std::cout << "Message header error" << std::endl;
+    }
+
+    unsigned short numberOfMessages = 0x0000;
+    unsigned short buffId = 0x0000;
+    unsigned short sizeOfText = 0x0000;
+    char text[0xff];
+    this->_wipeStrBuff(text, 0xff);
+    std::string strText;
+    unsigned short numberOfMusicsId = 0x0000;
+    unsigned short musicId = 0x0000;
+    std::vector<int> musics;
+    unsigned short numberOfSfxId = 0x0000;
+    unsigned short sfxId = 0x0000;
+    std::vector<int> sfxs;
+    unsigned short spriteId = 0x0000;
+    unsigned short clothesId = 0x0000;
+    unsigned short bgImageId = 0x0000;
+    unsigned short nextMessageId = 0x0000;
+    unsigned short nextEventId = 0x0000;
+
+    file->read(reinterpret_cast<char*>(&numberOfMessages), sizeof(short));
+    for (short i = 0; i < numberOfMessages; i++) {
+        file->read(reinterpret_cast<char*>(&buffId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&sizeOfText), sizeof(short));
+        file->read(text, sizeOfText);
+        strText = text;
+        this->_wipeStrBuff(text);
+        file->read(reinterpret_cast<char*>(&numberOfMusicsId), sizeof(short));
+        for (short j = 0; j < numberOfMusicsId; j++) {
+            file->read(reinterpret_cast<char*>(&musicId), sizeof(short));
+            musics.push_back(musicId);
+        }
+        file->read(reinterpret_cast<char*>(&numberOfSfxId), sizeof(short));
+        for (short j = 0; j < numberOfSfxId; j++) {
+            file->read(reinterpret_cast<char*>(&sfxId), sizeof(short));
+            sfxs.push_back(sfxId);
+        }
+        file->read(reinterpret_cast<char*>(&spriteId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&clothesId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&bgImageId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&nextMessageId), sizeof(short));
+        file->read(reinterpret_cast<char*>(&nextEventId), sizeof(short));
+
+        this->_Messages.push_back(Message(buffId, strText, musics, sfxs, spriteId, clothesId, bgImageId, nextMessageId, nextEventId));
+
+        musics.clear();
+        sfxs.clear();
+    }
 }
 
 void Story::_swapBytes(int& x)
