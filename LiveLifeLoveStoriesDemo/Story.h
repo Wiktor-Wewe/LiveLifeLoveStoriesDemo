@@ -66,6 +66,13 @@ private:
 	ChooseClothesEvent* _findCceById(int id);
 	Protagonist* _getPlayer();
 
+	// show
+	void _clsAndShowInfo();
+	void _showMessage(Message* m);
+	void _showEvent(Event* e);
+	void _showMPE(MakeProtagonistEvent* mpe);
+	void _showCCE(ChooseClothesEvent* cce);
+
 	void _setName(std::string name);
 	void _setInfo(std::string info);
 	void _setAuthor(std::string author);

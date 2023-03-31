@@ -190,11 +190,9 @@ int Story::play()
         while (1)
         {
             if (currentMessage) {
-                std::cout << currentMessage->getText() << std::endl;
+                this->_clsAndShowInfo();
+                this->_showMessage(currentMessage);
                 int nextMessage = currentMessage->getNextMessage();
-
-                std::string buff;
-                std::cin >> buff;
                 
                 if (nextMessage != 0) {
                     currentMessage = this->_findMessageById(nextMessage);
@@ -207,12 +205,9 @@ int Story::play()
                 }
             }
             else if (currentEvent) {
-                std::vector<std::string> playerOptions = currentEvent->getPlayerOptions();
-                if (!playerOptions.empty()) {
-                    for (int i = 0; i < playerOptions.size(); i++) {
-                        std::cout << "[" << i << "] " << playerOptions[i] << std::endl;
-                    }
-                    std::cout << std::endl;
+                this->_clsAndShowInfo();
+                if (!currentEvent->getPlayerOptions().empty()) {
+                    this->_showEvent(currentEvent);
                     
                     int nextMessage;
                     std::cin >> nextMessage;
@@ -238,59 +233,17 @@ int Story::play()
                 }
             }
             else if (currentMPE) {
-                std::cout << currentMPE->getText() << std::endl;
-                std::cout << "DefaultName = " << currentMPE->getName() << std::endl;
-                std::cout << "Podaj imie: ";
-                std::string name;
-                std::cin >> name;
-                this->_getPlayer()->setName(name);
-
-                int playerInput = 0;
-                
-                std::cout << "Wybierz kolor skory" << std::endl;
-                for (int i = 0; i < currentMPE->getSkins().size(); i++) {
-                    std::cout << "[" << i << "] " << currentMPE->getSkins()[i][0] << std::endl;
-                }
-                std::cin >> playerInput;
-                this->_getPlayer()->setGSkins(currentMPE->getSkins()[playerInput]);
-
-                std::cout << "Wybierz twarz" << std::endl;
-                for (int i = 0; i < currentMPE->getFaces().size(); i++) {
-                    std::cout << "[" << i << "] " << currentMPE->getFaces()[i][0] << std::endl;
-                }
-                std::cin >> playerInput;
-                this->_getPlayer()->setGFaces(currentMPE->getFaces()[playerInput]);
-
-                std::cout << "Wybierz kolor wlosow" << std::endl;
-                for (int i = 0; i < currentMPE->getHairs().size(); i++) {
-                    std::cout << "[" << i << "] " << currentMPE->getHairs()[i][0] << std::endl;
-                }
-                std::cin >> playerInput;
-                this->_getPlayer()->setGHairs(currentMPE->getHairs()[playerInput]);
-
-                this->_getPlayer()->printInfoAboutPlayer();
+                this->_clsAndShowInfo();
+                this->_showMPE(currentMPE);
 
                 int nextMessageId = currentMPE->getNextMessageId();
                 currentMessage = this->_findMessageById(nextMessageId);
                 currentMPE = NULL;
             }
             else if (currentCCE) {
-                std::cout << currentCCE->getText() << std::endl;
-                for (int i = 0; i < currentCCE->getClothes().size(); i++) {
-                    std::cout << "[" << i << "] " << currentCCE->getClothes()[i][0] << std::endl;
-                }
-                int playerInput1 = 0;
-                std::cin >> playerInput1;
-                this->_getPlayer()->setGClothes(currentCCE->getClothes()[playerInput1]);
+                this->_clsAndShowInfo();
+                this->_showCCE(currentCCE);
 
-                for (int i = 0; i < currentCCE->getClothes()[playerInput1].size(); i++) {
-                    std::cout << "[" << i << "] " << currentCCE->getClothes()[playerInput1][i] << std::endl;
-                }
-                int playerInput2 = 0;
-                std::cin >> playerInput2;
-                this->_getPlayer()->setCurrentClothesId(playerInput2);
-
-                std::cout << "Player clothes: " << this->_getPlayer()->getCurrentClothes() << std::endl;
                 int nextMessageId = currentCCE->getNextMessageId();
                 currentCCE = NULL;
                 currentMessage = this->_findMessageById(nextMessageId);
@@ -346,6 +299,130 @@ ChooseClothesEvent* Story::_findCceById(int id)
 Protagonist* Story::_getPlayer()
 {
     return this->_Player;
+}
+
+void Story::_clsAndShowInfo()
+{
+    system("cls");
+    std::cout << "name: " << this->_name << std::endl;
+    std::cout << "info: " << this->_info << std::endl;
+    std::cout << "author: " << this->_author << std::endl;
+    std::cout << "date: " << this->_date << std::endl;
+    std::cout << std::endl;
+    std::cout << "compilation info: " << std::endl;
+    std::cout << this->_compilationInfo << "\n\n";
+}
+
+void Story::_showMessage(Message* m)
+{
+    std::cout << "id: " << m->getId() << std::endl;
+    std::cout << "musics id: ";
+    for (int i = 0; i < m->getAllMusicId().size(); i++) {
+        std::cout << m->getAllMusicId()[i] << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "sfxs id: ";
+    for (int i = 0; i < m->getAllSfxId().size(); i++) {
+        std::cout << m->getAllSfxId()[i] << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "sprite id: " << m->getSpriteId() << std::endl;
+    std::cout << "clothes id: " << m->getClothesId() << std::endl;
+    std::cout << "bg image id: " << m->getBgImageId() << std::endl;
+    std::cout << "next message id: " << m->getNextMessage() << std::endl;
+    std::cout << "next event id: " << m->getNextEvent() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "message: " << std::endl;
+    std::cout << m->getText() << std::endl;
+    system("pause");
+}
+
+void Story::_showEvent(Event* e)
+{
+    std::cout << "id: " << e->getId() << std::endl;
+    std::cout << "next messages: ";
+    for (int i = 0; i < e->getNextMessages().size(); i++) {
+        std::cout << e->getNextMessages()[i] << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "next events: ";
+    for (int i = 0; i < e->getNextEvents().size(); i++) {
+        std::cout << e->getNextEvents()[i] << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "mpeid: " << e->getMpei() << std::endl;
+    std::cout << "cceid: " << e->getCcei() << std::endl;
+    std::cout << std::endl;
+    std::cout << "Take your time and choose: " << std::endl;
+    for (int i = 0; i < e->getPlayerOptions().size(); i++) {
+        std::cout << "[" << i << "] " << e->getPlayerOptions()[i] << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void Story::_showMPE(MakeProtagonistEvent* mpe)
+{
+    std::cout << "id: " << mpe->getId() << std::endl;
+    std::cout << "next message id: " << mpe->getNextMessageId() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << mpe->getText() << std::endl;
+    std::cout << "DefaultName = " << mpe->getName() << std::endl;
+    std::cout << "Enter your name: ";
+    std::string name;
+    std::cin >> name;
+    this->_getPlayer()->setName(name);
+
+    int playerInput = 0;
+
+    std::cout << "Select your skin color: " << std::endl;
+    for (int i = 0; i < mpe->getSkins().size(); i++) {
+        std::cout << "[" << i << "] " << mpe->getSkins()[i][0] << std::endl;
+    }
+    std::cin >> playerInput;
+    this->_getPlayer()->setGSkins(mpe->getSkins()[playerInput]);
+
+    std::cout << "Select your face: " << std::endl;
+    for (int i = 0; i < mpe->getFaces().size(); i++) {
+        std::cout << "[" << i << "] " << mpe->getFaces()[i][0] << std::endl;
+    }
+    std::cin >> playerInput;
+    this->_getPlayer()->setGFaces(mpe->getFaces()[playerInput]);
+
+    std::cout << "Select your hair color: " << std::endl;
+    for (int i = 0; i < mpe->getHairs().size(); i++) {
+        std::cout << "[" << i << "] " << mpe->getHairs()[i][0] << std::endl;
+    }
+    std::cin >> playerInput;
+    this->_getPlayer()->setGHairs(mpe->getHairs()[playerInput]);
+
+    this->_getPlayer()->printInfoAboutPlayer();
+    system("pause");
+}
+
+void Story::_showCCE(ChooseClothesEvent* cce)
+{
+    std::cout << "id: " << cce->getId() << std::endl;
+    std::cout << "next message id: " << cce->getNextMessageId() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << cce->getText() << std::endl;
+    for (int i = 0; i < cce->getClothes().size(); i++) {
+        std::cout << "[" << i << "] " << cce->getClothes()[i][0] << std::endl;
+    }
+    int playerInput = 0;
+    std::cin >> playerInput;
+    this->_getPlayer()->setGClothes(cce->getClothes()[playerInput]);
+
+    for (int i = 0; i < cce->getClothes()[playerInput].size(); i++) {
+        std::cout << "[" << i << "] " << cce->getClothes()[playerInput][i] << std::endl;
+    }
+    std::cin >> playerInput;
+    this->_getPlayer()->setCurrentClothesId(playerInput);
+
+    std::cout << "Player clothes: " << this->_getPlayer()->getCurrentClothes() << std::endl;
+    system("pause");
 }
 
 void Story::_setName(std::string name)
@@ -871,6 +948,8 @@ void Story::_loadCompilationInfo(std::fstream* file)
     if (buff != 0x00) {
         std::cout << "end of info error" << std::endl;
     }
+
+    this->_compilationInfo = compilationInfo;
 
     std::cout << "compilation info: " << std::endl;
     std::cout << compilationInfo << "\n\n";
