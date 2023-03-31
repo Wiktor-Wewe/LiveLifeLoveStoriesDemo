@@ -36,39 +36,39 @@ void Compilator::_loadFileToMemory(std::fstream* file)
         int header = this->_findHeader(line);
         switch (header) {
         case 1: // character
-            //std::cout << "try to handle character header" << std::endl;
+            std::cout << "try to handle character header" << std::endl;
             this->_loadCharacter(file);
             break;
         case 2: // cce
-            //std::cout << "try to handle cce header" << std::endl;
+            std::cout << "try to handle cce header" << std::endl;
             this->_loadCCE(file);
             break;
         case 3: // event
-            //std::cout << "try to handle event header" << std::endl;
+            std::cout << "try to handle event header" << std::endl;
             this->_loadEvent(file);
             break;
         case 4: // image
-            //std::cout << "try to handle image header" << std::endl;
+            std::cout << "try to handle image header" << std::endl;
             this->_loadImage(file);
             break;
         case 5: // mpe
-            //std::cout << "try to handle mpe header" << std::endl;
+            std::cout << "try to handle mpe header" << std::endl;
             this->_loadMPE(file);
             break;
         case 6: // message
-            //std::cout << "try to handle message header" << std::endl;
+            std::cout << "try to handle message header" << std::endl;
             this->_loadMessage(file);
             break;
         case 7: // music
-            //std::cout << "try to handle music header" << std::endl;
+            std::cout << "try to handle music header" << std::endl;
             this->_loadMusic(file);
             break;
         case 8: // sfx
-            //std::cout << "try to handle sfx header" << std::endl;
+            std::cout << "try to handle sfx header" << std::endl;
             this->_loadSfx(file);
             break;
         default:
-            //std::cout << "skipped line: " << line << std::endl;
+            std::cout << "skipped line: " << line << std::endl;
             break;
         }
     }
@@ -350,8 +350,13 @@ std::vector<int> Compilator::_readVectorInt(std::string line)
 
         if (line[i] == ',' || line[i] == ';') {
             l = std::stoi(s);
-            list.push_back(l);
-            s.clear();
+            if (l == 0) {
+                return list;
+            }
+            else {
+                list.push_back(l);
+                s.clear();
+            }
         }
     }
 
@@ -363,6 +368,12 @@ std::vector<std::string> Compilator::_readVectorText(std::string line)
     std::vector<std::string> list;
     std::string buff;
     int quote = 0;
+
+    if (line.find('"') == std::string::npos) {
+        if (line.find('0') != std::string::npos) {
+            return list;
+        }
+    }
 
     line = this->cutString(line, line.find("\""), line.size());
 

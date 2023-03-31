@@ -54,6 +54,7 @@ int Story::loadStory(std::fstream* file)
         std::cout << "end of file error" << std::endl;
         return 1;
     }
+    this->_Player = new Protagonist();
     
     return 0;
 }
